@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+<h1>Resumos - {{ disciplina.name }}</h1>  
+<br></br>
+{% for arquivo in arquivos %}
+    <p><a href="{{ arquivo.arquivo.url }}">{{ arquivo.titulo }}</a></p>
+    {% if user.is_authenticated and user == arquivo.author %}
+    <p><a href="{% url 'delete_arquivo' pk=arquivo.pk %}">Excluir arquivo</a></p>
+    {% endif %}
+{% endfor %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+</form>
+
+<a href="{% url 'arquivos' disciplina_id=disciplina.id %}">
+    <button>Voltar</button>
+</a>
+{% endblock %}

@@ -11,8 +11,8 @@ from django.db.models import Q, Count, F
 from django.urls import reverse_lazy
 from django.views import generic
 from django import forms
-from .models import Disciplina, Post, Comment, Profile, Reply
-from .forms import CustomUserCreationForm, PostForm, CommentForm, DisciplinaForm, ReplyForm
+from .models import Disciplina, Post, Comment, Profile, Reply, Arquivo
+from .forms import CustomUserCreationForm, PostForm, CommentForm, DisciplinaForm, ReplyForm, ArquivoForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -232,3 +232,45 @@ def disciplina_detail(request, disciplina_id):
 def arquivos(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
     return render(request, 'forum/arquivos.html', {'disciplina': disciplina})
+
+@login_required
+def provas(request, disciplina_id):
+    disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
+    arquivos = Arquivo.objects.filter(disciplina=disciplina, tipo='P')
+    for arquivo in arquivos:
+        arquivo.contador += 1
+        arquivo.save()
+    if request.method == 'POST':
+        form = ArquivoForm(request.POST, request.FILES)
+        if form.is_valid():
+            arquivo = form.save(commit=False)
+            arquivo.disciplina = disciplina
+            arquivo.tipo = 'P'
+            arquivo.author = request.user
+            arquivo.save()
+            return redirect('provas', disciplina_id=disciplina.id)
+    else:
+        form = ArquivoForm()
+    arquivos = Arquivo.objects.filter(disciplina=disciplina, tipo='P')
+    return render(request, 'forum/provas.html', {'disciplina': disciplina, 'arquivos': arquivos, 'form': form})
+
+@login_required
+def resumos(request, disciplina_id):
+    disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
+    arquivos = Arquivo.objects.filter(disciplina=disciplina, tipo='R')
+    for arquivo in arquivos:
+        arquivo.contador += 1
+        arquivo.save()
+    if request.method == 'POST':
+        form = ArquivoForm(request.POST, request.FILES)
+        if form.is_valid():
+            arquivo = form.save(commit=False)
+            arquivo.disciplina = disciplina
+            arquivo.tipo = 'R'
+            arquivo.author = request.user
+            arquivo.save()
+            return redirect('resumos', disciplina_id=disciplina.id)
+    else:
+        form = ArquivoForm()
+    arquivos = Arquivo.objects.filter(disciplina=disciplina, tipo='R')
+    return render(request, 'forum/resumos.html', {'disciplina': disciplina, 'arquivos': arquivos, 'form': form})

@@ -274,3 +274,19 @@ def resumos(request, disciplina_id):
         form = ArquivoForm()
     arquivos = Arquivo.objects.filter(disciplina=disciplina, tipo='R')
     return render(request, 'forum/resumos.html', {'disciplina': disciplina, 'arquivos': arquivos, 'form': form})
+
+
+@login_required
+def delete_arquivo(request, pk):
+    arquivo = get_object_or_404(Arquivo, pk=pk)
+    if request.user != arquivo.author:
+        return HttpResponseForbidden('Você não tem permissão para excluir este arquivo.')
+    if request.method == "POST":
+        tipo = arquivo.tipo
+        arquivo.delete()
+        if tipo == 'R':
+            return redirect('resumos', disciplina_id=arquivo.disciplina.id)
+        else:
+            return redirect('provas', disciplina_id=arquivo.disciplina.id)
+    else:
+        return render(request, 'forum/delete_arquivo.html', {'arquivo': arquivo})

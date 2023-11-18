@@ -27,6 +27,6 @@ urlpatterns = [
     path('disciplina/<int:disciplina_id>/arquivos/', views.arquivos, name='arquivos'),
     path('disciplina/<int:disciplina_id>/arquivos/provas/', views.provas, name='provas'),
     path('disciplina/<int:disciplina_id>/arquivos/resumos/', views.resumos, name='resumos'),  
-
+    path('arquivo/<int:pk>/delete/', views.delete_arquivo, name='delete_arquivo'),
     path('edit_biography/', views.edit_biography, name='edit_biography'),
 ]

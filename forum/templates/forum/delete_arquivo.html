@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+  <h1>Excluir Arquivo</h1>
+  <p>Você tem certeza que quer excluir o arquivo "{{ arquivo.titulo }}"?</p>
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit">Sim</button>
+    {% if arquivo.tipo == 'P' %}
+    <a href="{% url 'provas' disciplina_id=arquivo.disciplina.id %}">Não</a>
+    {% else %}
+    <a href="{% url 'resumos' disciplina_id=arquivo.disciplina.id %}">Não</a>
+    {% endif %}
+  </form>
+{% endblock %}

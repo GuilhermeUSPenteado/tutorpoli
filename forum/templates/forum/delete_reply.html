@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+<h1>Excluir resposta</h1>
+<p>Você tem certeza que quer excluir a resposta "{{ reply.text }}"?</p>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">Sim</button>
+    <a href="{% url 'post_detail' pk=reply.comment.post.pk %}">Não</a>
+</form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+<h1>Editar comentário</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar</button>
+</form>
+{% endblock %}

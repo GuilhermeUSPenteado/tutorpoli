@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+<head>
+    <title>TutorPoli</title>
+</head>
+<body>
+    <h1>Disciplinas</h1>
+    <form method="GET">
+        <input type="text" name="search" placeholder="Procurar por nome ou sigla da disciplina">
+        <input type="submit" value="Procurar">
+    </form>
+    <ul id="disciplinas">
+    {% for disciplina in disciplinas %}
+        <p class="disciplina"><a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}">{{ disciplina.name }}</a></p>
+    {% endfor %}
+    </ul>
+    <button id="loadMore">Carregar mais</button>
+
+<script>
+    window.onload = function() {
+        var items = document.getElementsByClassName('disciplina');
+        var loadMoreButton = document.getElementById('loadMore');
+        var count = 3;
+        for (var i = count; i < items.length; i++) {
+            items[i].style.display = 'none';
+        }
+        loadMoreButton.onclick = function() {
+            var nextCount = count + 5;
+            for (var i = count; i < nextCount && i < items.length; i++) {
+                items[i].style.display = 'block';
+            }
+            count = nextCount;
+            if (count >= items.length) {
+                loadMoreButton.style.display = 'none';
+            }
+        };
+    };
+</script>
+
+</body>
+</html>
+{% endblock %}

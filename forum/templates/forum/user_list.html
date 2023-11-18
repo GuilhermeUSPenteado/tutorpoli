@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+    <h1>Usuários</h1>
+    {% for user in users %}
+        <div>
+            <p><a href="{% url 'user_profile' user.id %}">{{ user.username }}</a></p>
+        </div>
+        <button id="loadMore">Carregar mais</button>
+    {% empty %}
+        <p>Não há usuários :(</p>
+    {% endfor %}
+
+<script>
+    window.onload = function() {
+        var items = document.getElementsByClassName('user');
+        var loadMoreButton = document.getElementById('loadMore');
+        var count = 10;
+        for (var i = count; i < items.length; i++) {
+            items[i].style.display = 'none';
+        }
+        loadMoreButton.onclick = function() {
+            var nextCount = count + 5;
+            for (var i = count; i < nextCount && i < items.length; i++) {
+                items[i].style.display = 'block';
+            }
+            count = nextCount;
+            if (count >= items.length) {
+                loadMoreButton.style.display = 'none';
+            }
+        };
+    };
+</script>
+
+{% endblock %}

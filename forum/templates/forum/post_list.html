@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+  <h2>Posts</h2>
+  <form method="GET">
+    <input type="text" name="search" placeholder="Procurar por título">
+    <input type="submit" value="Procurar">
+  </form>
+  {% if posts %}
+  {% else %}
+    <p>Nenhum post disponível</p>
+  {% endif %}
+  <ul id="posts">
+    {% for post in posts %}
+      <li class="post">
+        <a href="{% url 'post_detail' pk=post.pk %}" >{{ post.title }}</a>
+        <p>Publicado em: {{ post.post_date|date:"d/m/Y H:i" }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+  <button id="loadMore">Carregar mais</button>
+  <br></br>
+  <a href="{% url 'post_new' disciplina_id=disciplina.id %}"><button>Novo Post</button></a>
+  <br></br>
+  <a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}"><button>Voltar para a disciplina</button></a>
+
+<script>
+  window.onload = function() {
+      var items = document.getElementsByClassName('post');
+      var loadMoreButton = document.getElementById('loadMore');
+      var count = 3;
+
+      for (var i = count; i < items.length; i++) {
+          items[i].style.display = 'none';
+      }
+      loadMoreButton.onclick = function() {
+          var nextCount = count + 5;
+          for (var i = count; i < nextCount && i < items.length; i++) {
+              items[i].style.display = 'block';
+          }
+          count = nextCount;
+          if (count >= items.length) {
+              loadMoreButton.style.display = 'none';
+          }
+      };
+      if (items.length === 0) {
+          loadMoreButton.style.display = 'none';
+      }
+  };
+</script>
+
+{% endblock %}

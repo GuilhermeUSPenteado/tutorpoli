@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+  <title>
+    {% block title %}{% endblock %} TutorPoli
+  </title>
+</head>
+    
+<body>
+  <header id="cabecalho-principal">
+    <h1>TutorPoli</h1>
+    {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}">Acesse seu perfil</a>
+      <a href="{% url 'user_list' %}">Lista de usuários ativos</a>
+    {% else %}
+      <a href="{% url 'login' %}">Login</a>
+      <a href="{% url 'signup' %}">Cadastro</a>
+    {% endif %}
+    <nav id="navegacao-principal">
+      <a href="javascript:history.back()"> << </a>
+      <a href="{% url 'home' %}">Página inicial</a>
+    </nav>
+  </header>
+  <main id="conteiner-principal">
+    {% block content %}
+    {% endblock %}
+  </main>
+</body>
+<footer id="rodape-principal">
+    <section>
+        <article>
+            <p> &copy; Copyright 2023 TutorPoli</p>
+        </article>
+    </section>
+</footer>
+
+</html>

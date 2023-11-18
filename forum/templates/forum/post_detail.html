@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+<div class="post">
+  <p>Publicado em: {{ post.post_date|date:"d/m/Y H:i" }}</p>
+  <p>Publicado por: {{ post.author }}</p>
+  <h1>{{ post.title }}</h1>
+  <p>{{ post.content }}</p>
+  {% if user.is_authenticated and user == post.author %}
+    <p><a href="{% url 'post_edit' pk=post.pk disciplina_id=post.disciplina.id %}">Editar post</a></p>
+    <p><a href="{% url 'post_delete' pk=post.pk disciplina_id=post.disciplina.id %}">Excluir post</a></p>
+  {% endif %}
+</div>
+
+{% for comment in post.comments.all %}
+<div class="comment">
+  <h2>Comentários</h2>
+  <p>Comentador por {{ comment.author }} em {{ comment.created_date|date:"d/m/Y H:i" }}</p>
+  <p>{{ comment.text }}</p>
+  {% if user.is_authenticated and user == comment.author %}
+  <p><a href="{% url 'edit_comment' pk=comment.pk disciplina_id=comment.disciplina.id %}">Editar comentário</a></p>
+  <p><a href="{% url 'delete_comment' pk=comment.pk disciplina_id=comment.disciplina.id %}">Excluir comentário</a></p>
+  {% endif %}
+  <p><a href="{% url 'add_reply_to_comment' pk=comment.pk disciplina_id=comment.disciplina.id %}">Responder</a></p>
+  {% for reply in comment.replies.all %}
+  <div class="reply">
+      <p>{{ reply.author }} respondeu em {{ reply.created_date|date:"d/m/Y H:i" }}</p>
+      <p>{{ reply.text }}</p>
+      {% if user.is_authenticated and user == reply.author %}
+      <p><a href="{% url 'edit_reply' pk=reply.pk disciplina_id=reply.comment.disciplina.id %}">Editar resposta</a></p>
+      <p><a href="{% url 'delete_reply' pk=reply.pk disciplina_id=reply.comment.disciplina.id %}">Excluir resposta</a></p>
+      {% endif %}
+  </div>
+  {% endfor %}
+  {% empty %}
+  <p>Nenhum comentário ainda.</p>
+  {% endfor %}
+  <p><a href="{% url 'add_comment_to_post' pk=post.pk disciplina_id=post.disciplina.id %}">Adicionar comentário</a></p>
+</div>
+
+<a href="{% url 'post_list' disciplina_id=post.disciplina.id %}">
+  <button>Voltar para o fórum</button>
+</a>
+{% endblock %}

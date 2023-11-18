@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+  <h1>Editar Biografia</h1>
+  <form method="post">
+    {% csrf_token %}
+    <label for="biografia">Biografia:</label><br>
+    <textarea id="biografia" name="biografia">{{ user.profile.biografia }}</textarea><br>
+    <button type="submit">Salvar</button>
+  </form>
+{% endblock %}

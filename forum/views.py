@@ -227,3 +227,8 @@ def disciplina_detail(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
     if request.method == 'POST':
         return render(request, 'forum/disciplina_detail.html', {'disciplina': disciplina})
+
+@login_required
+def arquivos(request, disciplina_id):
+    disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
+    return render(request, 'forum/arquivos.html', {'disciplina': disciplina})

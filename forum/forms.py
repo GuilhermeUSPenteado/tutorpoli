@@ -1,16 +1,22 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Disciplina, Post, Comment, Reply
+from .models import Disciplina, Post, Comment, Arquivo, Reply
    
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, help_text='Obrigatório.')
     last_name = forms.CharField(max_length=30, required=True, help_text='Obrigatório.')
     email = forms.EmailField(max_length=254, help_text='Obrigatório. Informe um email válido.')
+    
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
 
+class ArquivoForm(forms.ModelForm):
+    class Meta:
+        model = Arquivo
+        fields = ['titulo', 'arquivo',]
+        
 class DisciplinaForm(forms.ModelForm):
     class Meta:
         model = Disciplina

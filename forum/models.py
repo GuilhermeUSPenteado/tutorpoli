@@ -50,6 +50,17 @@ class Comment(models.Model):
         return self.text
     def get_absolute_url(self):
         return reverse('post_detail', kwargs={'pk': self.post.pk})
+    
+class Arquivo(models.Model):
+    TIPOS = (
+        ('P', 'Prova'),
+        ('R', 'Resumo'),
+    )
+    titulo = models.CharField(max_length=200, default='Escreva o nome do seu arquivo')
+    arquivo = models.FileField(upload_to='arquivos/')
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=1, choices=TIPOS)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Reply(models.Model):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='replies')

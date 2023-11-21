@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+<h1>{{ disciplina.name }}</h1>
+<p>Horário da monitoria: {{ disciplina.horario_monitoria }}</p>
+<p>Dia(s) da semana: {{ disciplina.dia_da_semana }}</p>
+<p>Sala: {{ disciplina.sala }}</p>
+<p>Monitor: {{ disciplina.nome_monitor }}</p>
+
+{% if user.is_authenticated and user.profile.tipo == 'T' and disciplina in user.profile.disciplinas.all %}
+<a href="{% url 'editar_disciplina' disciplina_id=disciplina.id %}">
+    <button>Editar informações da disciplina</button>
+</a>
+{% endif %}
+{% if user.is_authenticated and request.user.is_superuser %}
+<a href="{% url 'editar_disciplina' disciplina_id=disciplina.id %}">
+    <button>Editar informações da disciplina</button>
+</a>
+{% endif %}
+<br></br>
+<a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}">
+    <button>Voltar para a disciplina</button>
+</a>
+{% endblock %}

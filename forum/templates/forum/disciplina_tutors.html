@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+
+{% block content %}
+  <h2>Tutores para {{ disciplina.name }}</h2>
+  <ul>
+    {% for tutor in tutors %}
+      <li><a href="{% url 'user_profile' user.id %}">{{ tutor.user.username }}</li></a>
+    {% empty %} 
+    <p>Não há tutores para essa disciplina ainda</p>
+    {% endfor %}
+    <button id="loadMore">Carregar mais</button>
+  </ul>
+
+  <a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}">
+    <button>Voltar para a disciplina</button>
+  </a>
+
+<script>
+    window.onload = function() {
+        var items = document.getElementsByClassName('tutor');
+        var loadMoreButton = document.getElementById('loadMore');
+        var count = 3;
+  
+        for (var i = count; i < items.length; i++) {
+            items[i].style.display = 'none';
+        }
+        loadMoreButton.onclick = function() {
+            var nextCount = count + 5;
+            for (var i = count; i < nextCount && i < items.length; i++) {
+                items[i].style.display = 'block';
+            }
+            count = nextCount;
+            if (count >= items.length) {
+                loadMoreButton.style.display = 'none';
+            }
+        };
+        if (items.length === 0) {
+            loadMoreButton.style.display = 'none';
+        }
+    };
+</script>
+{% endblock %}

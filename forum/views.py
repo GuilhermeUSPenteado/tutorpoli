@@ -37,6 +37,14 @@ def profile(request):
     if request.method == "POST":
         tipo = request.POST.get('tipo')
         biografia = request.POST.get('biografia')
+        if tipo == 'T':
+            return redirect('escolher_disciplinas')
+        else:
+            request.user.profile.tipo = 'A'
+            if biografia is not None:
+                request.user.profile.biografia = biografia
+            request.user.profile.save()
+            messages.success(request, 'Perfil atualizado com sucesso')
     return render(request, 'profile.html')
 
 @login_required
@@ -290,3 +298,19 @@ def delete_arquivo(request, pk):
             return redirect('provas', disciplina_id=arquivo.disciplina.id)
     else:
         return render(request, 'forum/delete_arquivo.html', {'arquivo': arquivo})
+
+@login_required
+def editar_disciplina(request, disciplina_id):
+    disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
+    tutors = Profile.objects.filter(tipo='T', disciplinas=disciplina)
+    if request.user.profile not in tutors and not request.user.is_superuser:
+        return HttpResponseForbidden("Você não tem permissão para editar esta disciplina.")
+    if request.method == "POST":
+        form = DisciplinaForm(request.POST, instance=disciplina)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Informações da disciplina atualizadas com sucesso')
+            return redirect('disciplina_info', disciplina_id=disciplina.id)
+    else:
+        form = DisciplinaForm(instance=disciplina)
+    return render(request, 'forum/editar_disciplina.html', {'form': form, 'disciplina': disciplina})

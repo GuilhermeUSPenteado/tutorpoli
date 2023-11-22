@@ -21,20 +21,48 @@
     </ul>
     <button id="loadMore">Carregar mais</button>
 
+    <h2>Disciplinas Populares</h2>
+{% for disciplina in disciplinas_populares|slice:":3" %}
+    <p>{{ disciplina.name }}: {{ disciplina.contador }} acessos</p>
+{% endfor %}
+
+    <h2>Disciplinas com mais publicações no fórum</h2>
+{% for disciplina in disciplina_com_mais_posts %}
+    <p>A disciplina {{ disciplina.name }} tem {{ disciplina.num_posts }} posts.</p>
+{% empty %}
+    <p>Nenhuma disciplina tem posts no fórum ainda.</p>
+{% endfor %}
+
+<h2>Arquivos Populares</h2>
+{% for arquivo in arquivos_populares %}
+    <p>Arquivo {{ arquivo.titulo }} da disciplina {{ arquivo.disciplina.name }}: {{ arquivo.contador }} downloads</p>
+{% endfor %}
+
+<h2>Usuários Mais Ativos</h2>
+{% for profile in usuarios_ativos %}
+    <p>{{ profile.username }}: {{ profile.horas_ativas }} horas</p>
+{% endfor %}
+
 <script>
     window.onload = function() {
         var items = document.getElementsByClassName('disciplina');
         var loadMoreButton = document.getElementById('loadMore');
         var count = 3;
+
+        // Inicialmente, oculte todas as disciplinas acima do limite
         for (var i = count; i < items.length; i++) {
             items[i].style.display = 'none';
         }
+
         loadMoreButton.onclick = function() {
+            // Quando o botão "Carregar mais" é clicado, exiba mais 5 disciplinas
             var nextCount = count + 5;
             for (var i = count; i < nextCount && i < items.length; i++) {
                 items[i].style.display = 'block';
             }
             count = nextCount;
+
+            // Se todas as disciplinas estiverem visíveis, oculte o botão "Carregar mais"
             if (count >= items.length) {
                 loadMoreButton.style.display = 'none';
             }
@@ -45,3 +73,4 @@
 </body>
 </html>
 {% endblock %}
+

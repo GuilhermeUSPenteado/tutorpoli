@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+  <h2>Escolher Disciplinas</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% for disciplina in disciplinas %}
+      <input type="checkbox" name="disciplinas" value="{{ disciplina.id }}">
+      <label>{{ disciplina.name }}</label><br>
+    {% endfor %}
+    <button type="submit">Salvar</button>
+  </form>
+{% endblock %}

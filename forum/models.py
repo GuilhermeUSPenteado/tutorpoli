@@ -60,6 +60,7 @@ class Arquivo(models.Model):
     arquivo = models.FileField(upload_to='arquivos/')
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     tipo = models.CharField(max_length=1, choices=TIPOS)
+    contador = models.IntegerField(default=0)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Reply(models.Model):

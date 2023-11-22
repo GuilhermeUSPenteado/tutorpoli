@@ -25,9 +25,13 @@ urlpatterns = [
     path('users/', views.user_list, name='user_list'),
     path('users/<int:user_id>/', views.user_profile, name='user_profile'),
     path('disciplina/<int:disciplina_id>/', views.disciplina_detail, name='disciplina_detail'),
+    path('disciplina/<int:disciplina_id>/info/', views.disciplina_info, name='disciplina_info'),
     path('disciplina/<int:disciplina_id>/arquivos/', views.arquivos, name='arquivos'),
     path('disciplina/<int:disciplina_id>/arquivos/provas/', views.provas, name='provas'),
     path('disciplina/<int:disciplina_id>/arquivos/resumos/', views.resumos, name='resumos'),  
     path('arquivo/<int:pk>/delete/', views.delete_arquivo, name='delete_arquivo'),
+    path('disciplina/<int:disciplina_id>/tutors/', views.disciplina_tutors, name='disciplina_tutors'),
+    path('escolher_disciplinas/', views.escolher_disciplinas, name='escolher_disciplinas'),
     path('edit_biography/', views.edit_biography, name='edit_biography'),
-]
+    path('disciplina/<int:disciplina_id>/editar/', views.editar_disciplina, name='editar_disciplina'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

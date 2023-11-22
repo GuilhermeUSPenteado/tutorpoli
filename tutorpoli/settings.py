@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-uy7nt$^2lwx2k6mti@r8a$=(isbzc)#d=(*2tc!czfnqkgk!ga'
+SECRET_KEY = 'django-insecure-7ufuyjlkcgwm&2(uz^ehk&jv9#w&&(z^_@=o=_5ji=jb4jb)$&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -120,13 +120,27 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = ["127.0.0.1", ".onrender.com"] # modifique esta linha
+
+CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com/"] # adicione esta linha
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

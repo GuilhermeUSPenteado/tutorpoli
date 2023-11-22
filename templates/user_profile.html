@@ -1,45 +1,27 @@
+{% extends 'base.html' %}
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-  <title>
-    {% block title %}{% endblock %} TutorPoli
-  </title>
-</head>
-    
-<body>
-  <header id="cabecalho-principal">
-    <h1>TutorPoli</h1>
-    {% if user.is_authenticated %}
-      <a href="{% url 'profile' %}">Acesse seu perfil</a>
-      <a href="{% url 'user_list' %}">Lista de usuários ativos</a>
-    {% else %}
-      <a href="{% url 'login' %}">Login</a>
-      <a href="{% url 'signup' %}">Cadastro</a>
-    {% endif %}
-    <nav id="navegacao-principal">
-      <a href="javascript:history.back()"> << </a>
-      <a href="{% url 'home' %}">Página inicial</a>
-    </nav>
-  </header>
-  <main id="conteiner-principal">
-    {% block content %}
-    {% endblock %}
-  </main>
-</body>
-<footer id="rodape-principal">
-    <section>
-        <article>
-            <p> &copy; Copyright 2023 TutorPoli</p>
-        </article>
-    </section>
-</footer>
+{% block content %}
+    <div class="profile-section">
+        <h2>Detalhes do Perfil</h2>
+        <p>Data de ingresso: {{ user.date_joined }}</p>
+        <p>último acesso: {{ user.last_login }}</p>
+        <p>Nome: {{ user.first_name }}</p>
+        <p>Sobrenome: {{ user.last_name }}</p>
+        <p>Email: {{ user.email }}</p>    
+        <p>Tipo: {{ user.profile.get_tipo_display }}</p>
+        <p>Biografia: {{ user.profile.biografia }}</p>
+        {% if user.profile.tipo == 'T' %}
+        <p>Disciplinas que este usuário é tutor:</p>
+        <ul>
+            {% for disciplina in user.profile.disciplinas.all %}
+                <li>{{ disciplina.name }}</li>
+            {% endfor %}
+        {% endif %}
+    </div>
 
-</html>
+      </ul>
+{% endblock %}

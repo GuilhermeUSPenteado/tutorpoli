@@ -15,6 +15,25 @@
     <p>Email: {{ user.email }}</p>
     <p>Tipo: {{ user.profile.get_tipo_display }}</p>
     <p>Biografia: {{ user.profile.biografia }}</p>
+    {% if user.profile.tipo == 'T' %}
+      <p>Disciplinas que você é tutor:</p>
+      <ul>
+        {% for disciplina in user.profile.disciplinas.all %}
+          <li>{{ disciplina.name }}</li>
+        {% endfor %}
+      </ul>
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="tipo" value="A">Tornar-se Aluno</button>
+      </form>
+    {% elif user.profile.tipo == 'A' %}
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="tipo" value="T">Tornar-se Tutor</button>
+      </form>
+    {% endif %}
+  </div>
+
   <div class="actions">
     <a href="{% url 'edit_biography' %}">Editar Biografia</a>
     <br></br>

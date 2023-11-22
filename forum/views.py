@@ -7,12 +7,13 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils import timezone
 from django.http import HttpResponseForbidden, FileResponse, Http404
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db.models import Q, Count, F
 from django.urls import reverse_lazy
 from django.views import generic
 from django import forms
-from .models import Disciplina, Post, Comment, Profile, Reply, Arquivo
-from .forms import CustomUserCreationForm, PostForm, CommentForm, DisciplinaForm, ReplyForm, ArquivoForm
+from .models import Arquivo, Disciplina, Post, Comment, Profile, Reply
+from .forms import CustomUserCreationForm, PostForm, CommentForm, ArquivoForm, DisciplinaForm, ReplyForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -28,9 +29,27 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
+from django.db.models import Q
+
 def home(request):
-    disciplinas = Disciplina.objects.all()
-    return render(request, 'home.html', {'disciplinas': disciplinas})
+    search_query = request.GET.get('search', '')
+    if search_query:
+        disciplinas = Disciplina.objects.filter(Q(name__icontains=search_query))
+    else:
+        disciplinas = Disciplina.objects.all()
+    disciplinas_populares = Disciplina.objects.order_by('-contador')[:5]
+    arquivos_populares = Arquivo.objects.order_by('-contador')[:3]
+    disciplina_com_mais_posts = Disciplina.objects.annotate(num_posts=Count('post')).order_by('-num_posts')[:3]
+    usuarios_ativos = Profile.objects.order_by('-tempo_ativo')[:5]
+    usuarios_ativos = [
+        {
+            'username': profile.user.username,
+            'horas_ativas': profile.tempo_ativo.total_seconds() // 3600
+        }
+        for profile in usuarios_ativos
+    ]
+    return render(request, 'home.html', {'disciplinas': disciplinas, 'disciplinas_populares': disciplinas_populares, 'arquivos_populares': arquivos_populares, 'disciplina_com_mais_posts': disciplina_com_mais_posts, 'usuarios_ativos': usuarios_ativos})
+
 
 @login_required
 def profile(request):
@@ -47,6 +66,7 @@ def profile(request):
             messages.success(request, 'Perfil atualizado com sucesso')
     return render(request, 'profile.html')
 
+
 @login_required
 def edit_biography(request):
     if request.method == "POST":
@@ -56,6 +76,20 @@ def edit_biography(request):
         messages.success(request, 'Biografia atualizada com sucesso')
         return redirect('profile')
     return render(request, 'edit_biography.html')
+
+@login_required
+def escolher_disciplinas(request):
+    if request.method == "POST":
+        disciplinas_ids = request.POST.getlist('disciplinas')
+        disciplinas = Disciplina.objects.filter(id__in=disciplinas_ids)
+        request.user.profile.disciplinas.set(disciplinas)
+        request.user.profile.tipo = 'T'
+        request.user.profile.save()
+        messages.success(request, 'Você agora é um Tutor')
+        return redirect('profile')
+    else:
+        disciplinas = Disciplina.objects.all()
+        return render(request, 'escolher_disciplinas.html', {'disciplinas': disciplinas})
 
 @login_required
 def user_list(request):
@@ -75,8 +109,12 @@ class SignUpView(generic.CreateView):
     template_name = 'registration/signup.html'
 
 def logout_view(request):
+    tempo_logado = datetime.now() - request.user.last_login
     profile = Profile.objects.get(user=request.user)
+    profile.tempo_ativo += tempo_logado
     profile.save()
+
+    # Faça logout do usuário
     logout(request)
     return redirect('base')
 
@@ -110,9 +148,9 @@ def post_new(request, disciplina_id):
     return render(request, 'forum/post_edit.html', {'form': form})
 
 @login_required
-def post_edit(request, pk, disciplina_id):
+def post_edit(request, pk, disciplina_id): # novo parâmetro
     post = get_object_or_404(Post, pk=pk)
-    if request.user != post.author and request.user != post.disciplina.professor:
+    if request.user != post.author and request.user != post.disciplina.professor: # verifica se o usuário é o autor ou o professor
         return HttpResponseForbidden()
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
@@ -128,13 +166,13 @@ def post_edit(request, pk, disciplina_id):
     return render(request, 'forum/post_edit.html', {'form': form})
 
 @login_required
-def post_delete(request, pk, disciplina_id):
+def post_delete(request, pk, disciplina_id): # novo parâmetro
     post = get_object_or_404(Post, pk=pk)
-    if request.user != post.author:
+    if request.user != post.author and request.user != post.disciplina.professor: # verifica se o usuário é o autor ou o professor
         return HttpResponseForbidden()
     if request.method == "POST":
         post.delete()
-        return redirect('post_list', disciplina_id=disciplina_id)
+        return redirect('post_list', disciplina_id=disciplina_id) # passa o id da disciplina como parâmetro
     else:
         return render(request, 'forum/post_confirm_delete.html', {'post': post})
 
@@ -142,6 +180,7 @@ def post_delete(request, pk, disciplina_id):
 def add_comment_to_post(request, pk, disciplina_id):
     post = get_object_or_404(Post, pk=pk)
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
+
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -153,11 +192,13 @@ def add_comment_to_post(request, pk, disciplina_id):
             return redirect('post_detail', pk=post.pk)
     else:
         form = CommentForm(initial={'disciplina': disciplina})
-    comments = Comment.objects.filter(post=post)
+
+    comments = Comment.objects.filter(post=post)  # Adiciona os comentários existentes ao contexto
+
     return render(request, 'forum/add_comment_to_post.html', {'form': form, 'comments': comments})
 
 @login_required
-def edit_comment(request, pk, disciplina_id):
+def edit_comment(request, pk, disciplina_id): # nova view
     comment = get_object_or_404(Comment, pk=pk)
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
     if request.user != comment.author:
@@ -172,7 +213,7 @@ def edit_comment(request, pk, disciplina_id):
     return render(request, 'forum/edit_comment.html', {'form': form})
 
 @login_required
-def delete_comment(request, pk, disciplina_id):
+def delete_comment(request, pk, disciplina_id): # nova view
     comment = get_object_or_404(Comment, pk=pk)
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
     if request.user != comment.author:
@@ -223,18 +264,31 @@ def delete_reply(request, pk, disciplina_id):
     else:
         return render(request, 'forum/delete_reply.html', {'reply': reply})
 
+####################################################################################################
+@login_required
 def forum(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
-    return render(request, 'forum.html', {'disciplina': disciplina})
+    posts = Post.objects.filter(disciplina=disciplina)
+    return render(request, 'forum.html', {'disciplina': disciplina, 'posts': posts})
 
 def disciplinas(request):
     disciplinas = Disciplina.objects.order_by('name')
     return render(request, 'disciplinas.html', {'disciplinas': disciplinas})
 
+@login_required
 def disciplina_detail(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
+    disciplina.contador += 1
+    disciplina.save()
     if request.method == 'POST':
+        return render(request, 'forum/disciplina_info.html', {'disciplina': disciplina})
+    else:
         return render(request, 'forum/disciplina_detail.html', {'disciplina': disciplina})
+
+@login_required
+def disciplina_info(request, disciplina_id):
+    disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
+    return render(request, 'forum/disciplina_info.html', {'disciplina': disciplina})
 
 @login_required
 def arquivos(request, disciplina_id):
@@ -283,7 +337,6 @@ def resumos(request, disciplina_id):
     arquivos = Arquivo.objects.filter(disciplina=disciplina, tipo='R')
     return render(request, 'forum/resumos.html', {'disciplina': disciplina, 'arquivos': arquivos, 'form': form})
 
-
 @login_required
 def delete_arquivo(request, pk):
     arquivo = get_object_or_404(Arquivo, pk=pk)
@@ -300,6 +353,18 @@ def delete_arquivo(request, pk):
         return render(request, 'forum/delete_arquivo.html', {'arquivo': arquivo})
 
 @login_required
+def disciplina_tutors(request, disciplina_id):
+    disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
+    tutors = Profile.objects.filter(tipo='T', disciplinas=disciplina)
+
+    # Se o método for POST, atualize as informações da disciplina
+    if request.method == "POST":
+        # Atualize as informações da disciplina aqui
+        pass
+
+    return render(request, 'forum/disciplina_tutors.html', {'disciplina': disciplina, 'tutors': tutors})
+
+@login_required
 def editar_disciplina(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
     tutors = Profile.objects.filter(tipo='T', disciplinas=disciplina)
@@ -314,3 +379,4 @@ def editar_disciplina(request, disciplina_id):
     else:
         form = DisciplinaForm(instance=disciplina)
     return render(request, 'forum/editar_disciplina.html', {'form': form, 'disciplina': disciplina})
+

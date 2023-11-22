@@ -6,7 +6,22 @@
 
 {% block content %}
 <h1>{{ disciplina.name }}</h1>
-
+<a href="{% url 'post_list' disciplina_id=disciplina.id %}">
+    <button>Ir para o fórum</button>
+</a>
+<br></br>
+<a href="{% url 'disciplina_info' disciplina_id=disciplina.id %}">
+    <button>Informações da Disciplina</button>
+</a>
+<br></br>
+<a href="{% url 'arquivos' disciplina_id=disciplina.id %}">
+    <button>Arquivos</button>
+</a>
+<br></br>
+<a href="{% url 'disciplina_tutors' disciplina.id %}">
+    <button>Lista de tutores</button>
+</a>
+<br></br>
 <a href="{% url 'home' %}">
     <button>Voltar</button>
 </a>

@@ -17,11 +17,6 @@ class ArquivoForm(forms.ModelForm):
         model = Arquivo
         fields = ['titulo', 'arquivo',]
         
-class DisciplinaForm(forms.ModelForm):
-    class Meta:
-        model = Disciplina
-        fields = ['horario_monitoria', 'dia_da_semana', 'sala', 'nome_monitor']
-
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post

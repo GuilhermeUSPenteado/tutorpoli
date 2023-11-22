@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+  <h1>Editar {{ disciplina.name }}</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar</button>
+  </form>
+<a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}">
+    <button>Voltar para a disciplina</button>
+{% endblock %}

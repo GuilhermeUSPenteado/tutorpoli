@@ -12,6 +12,8 @@ class Disciplina(models.Model):
     dia_da_semana = models.TextField()
     sala = models.TextField()
     nome_monitor = models.TextField()
+    contador = models.IntegerField(default=0)
+
     def __str__(self):
         return self.name
     
@@ -25,6 +27,7 @@ class Profile(models.Model):
     tipo = models.CharField(max_length=2, choices=TIPOS, default='A')
     disciplinas = models.ManyToManyField(Disciplina, blank=True)
     biografia = models.TextField(blank=True)
+    tempo_ativo = models.DurationField(default=timedelta())
 
 class Post(models.Model):
     title = models.CharField("Título", max_length=200)
@@ -44,6 +47,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField("Conteúdo")
     created_date = models.DateTimeField(auto_now_add=True)
+    
     class Meta:
         ordering = ['-created_date']
     def __str__(self):
@@ -68,9 +72,12 @@ class Reply(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField("Conteúdo")
     created_date = models.DateTimeField(auto_now_add=True)
+    
     class Meta:
         ordering = ['-created_date']
+
     def __str__(self):
         return self.text
+    
     def get_absolute_url(self):
         return reverse('post_detail', kwargs={'pk': self.comment.post.pk})

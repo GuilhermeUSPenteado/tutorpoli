@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils import timezone
 from django.http import HttpResponseForbidden, FileResponse, Http404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db.models import Q, Count, F
 from django.urls import reverse_lazy
 from django.views import generic
@@ -50,7 +49,6 @@ def home(request):
     ]
     return render(request, 'home.html', {'disciplinas': disciplinas, 'disciplinas_populares': disciplinas_populares, 'arquivos_populares': arquivos_populares, 'disciplina_com_mais_posts': disciplina_com_mais_posts, 'usuarios_ativos': usuarios_ativos})
 
-
 @login_required
 def profile(request):
     if request.method == "POST":
@@ -65,7 +63,6 @@ def profile(request):
             request.user.profile.save()
             messages.success(request, 'Perfil atualizado com sucesso')
     return render(request, 'profile.html')
-
 
 @login_required
 def edit_biography(request):
@@ -113,8 +110,6 @@ def logout_view(request):
     profile = Profile.objects.get(user=request.user)
     profile.tempo_ativo += tempo_logado
     profile.save()
-
-    # Faça logout do usuário
     logout(request)
     return redirect('base')
 
@@ -148,9 +143,9 @@ def post_new(request, disciplina_id):
     return render(request, 'forum/post_edit.html', {'form': form})
 
 @login_required
-def post_edit(request, pk, disciplina_id): # novo parâmetro
+def post_edit(request, pk, disciplina_id):
     post = get_object_or_404(Post, pk=pk)
-    if request.user != post.author and request.user != post.disciplina.professor: # verifica se o usuário é o autor ou o professor
+    if request.user != post.author and request.user != post.disciplina.professor:
         return HttpResponseForbidden()
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
@@ -166,13 +161,13 @@ def post_edit(request, pk, disciplina_id): # novo parâmetro
     return render(request, 'forum/post_edit.html', {'form': form})
 
 @login_required
-def post_delete(request, pk, disciplina_id): # novo parâmetro
+def post_delete(request, pk, disciplina_id):
     post = get_object_or_404(Post, pk=pk)
-    if request.user != post.author and request.user != post.disciplina.professor: # verifica se o usuário é o autor ou o professor
+    if request.user != post.author and request.user != post.disciplina.professor:
         return HttpResponseForbidden()
     if request.method == "POST":
         post.delete()
-        return redirect('post_list', disciplina_id=disciplina_id) # passa o id da disciplina como parâmetro
+        return redirect('post_list', disciplina_id=disciplina_id)
     else:
         return render(request, 'forum/post_confirm_delete.html', {'post': post})
 
@@ -180,7 +175,6 @@ def post_delete(request, pk, disciplina_id): # novo parâmetro
 def add_comment_to_post(request, pk, disciplina_id):
     post = get_object_or_404(Post, pk=pk)
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
-
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -192,13 +186,11 @@ def add_comment_to_post(request, pk, disciplina_id):
             return redirect('post_detail', pk=post.pk)
     else:
         form = CommentForm(initial={'disciplina': disciplina})
-
-    comments = Comment.objects.filter(post=post)  # Adiciona os comentários existentes ao contexto
-
+    comments = Comment.objects.filter(post=post)
     return render(request, 'forum/add_comment_to_post.html', {'form': form, 'comments': comments})
 
 @login_required
-def edit_comment(request, pk, disciplina_id): # nova view
+def edit_comment(request, pk, disciplina_id):
     comment = get_object_or_404(Comment, pk=pk)
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
     if request.user != comment.author:
@@ -213,7 +205,7 @@ def edit_comment(request, pk, disciplina_id): # nova view
     return render(request, 'forum/edit_comment.html', {'form': form})
 
 @login_required
-def delete_comment(request, pk, disciplina_id): # nova view
+def delete_comment(request, pk, disciplina_id):
     comment = get_object_or_404(Comment, pk=pk)
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
     if request.user != comment.author:
@@ -264,7 +256,6 @@ def delete_reply(request, pk, disciplina_id):
     else:
         return render(request, 'forum/delete_reply.html', {'reply': reply})
 
-####################################################################################################
 @login_required
 def forum(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
@@ -356,12 +347,8 @@ def delete_arquivo(request, pk):
 def disciplina_tutors(request, disciplina_id):
     disciplina = get_object_or_404(Disciplina, pk=disciplina_id)
     tutors = Profile.objects.filter(tipo='T', disciplinas=disciplina)
-
-    # Se o método for POST, atualize as informações da disciplina
     if request.method == "POST":
-        # Atualize as informações da disciplina aqui
         pass
-
     return render(request, 'forum/disciplina_tutors.html', {'disciplina': disciplina, 'tutors': tutors})
 
 @login_required
@@ -379,4 +366,3 @@ def editar_disciplina(request, disciplina_id):
     else:
         form = DisciplinaForm(instance=disciplina)
     return render(request, 'forum/editar_disciplina.html', {'form': form, 'disciplina': disciplina})
-

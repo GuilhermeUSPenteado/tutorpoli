@@ -14,7 +14,6 @@ class Disciplina(models.Model):
     sala = models.TextField()
     nome_monitor = models.TextField()
     contador = models.IntegerField(default=0)
-    
     def __str__(self):
         return self.name
 
@@ -44,17 +43,15 @@ class Arquivo(models.Model):
 
 class Post(models.Model):
     title = models.CharField("Título", max_length=200)
-    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE) # novo campo
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE)
     content = models.TextField("Conteúdo")
     post_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     def publish(self):
         self.published_date = timezone.now()
         self.save()
-
     def __str__(self):
         return self.title
-
 
 class Comment(models.Model):
     post = models.ForeignKey('forum.Post', on_delete=models.CASCADE, related_name='comments')
@@ -62,14 +59,11 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField("Conteúdo")
     created_date = models.DateTimeField(auto_now_add=True)
-
     class Meta:
         ordering = ['-created_date']
-
     def __str__(self):
         return self.text
-
-    def get_absolute_url(self): # novo método
+    def get_absolute_url(self):
         return reverse('post_detail', kwargs={'pk': self.post.pk})
 
 class Reply(models.Model):
@@ -77,13 +71,9 @@ class Reply(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField("Conteúdo")
     created_date = models.DateTimeField(auto_now_add=True)
-
     class Meta:
         ordering = ['-created_date']
-
     def __str__(self):
         return self.text
-
     def get_absolute_url(self):
         return reverse('post_detail', kwargs={'pk': self.comment.post.pk})
-

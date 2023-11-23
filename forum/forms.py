@@ -7,7 +7,6 @@ class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, help_text='Obrigatório.')
     last_name = forms.CharField(max_length=30, required=True, help_text='Obrigatório.')
     email = forms.EmailField(max_length=254, help_text='Obrigatório. Informe um email válido.')
-
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
@@ -20,16 +19,15 @@ class ArquivoForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'content', 'disciplina') # novo campo
+        fields = ('title', 'content', 'disciplina')
         widgets = {
-            'disciplina': forms.HiddenInput() # campo oculto
+            'disciplina': forms.HiddenInput()
         }
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text',)
-
     def clean_text(self):
         text = self.cleaned_data.get('text')
         if not text:
@@ -42,7 +40,6 @@ class ReplyForm(forms.ModelForm):
     class Meta:
         model = Reply
         fields = ('text',)
-
     def clean_text(self):
         text = self.cleaned_data.get('text')
         if not text:

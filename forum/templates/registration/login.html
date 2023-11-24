@@ -5,13 +5,18 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
-  <h2>Login</h2>
+<style>
+  .card {
+    box-shadow: 0 16px 48px #6a6a6b;
+  }
+</style>
   <form method="POST">
     <div class="container">
       <div class="row">
         <div class="col-md-8 mt-3 left">
           <div class="card mb-4">
             <div class="card-body">
+              <h2>Login</h2>
               {% csrf_token %}
               {{ form.as_p }}
               <button type="submit" class="btn btn-primary full-width">Login</button>

@@ -17,12 +17,6 @@
   </form>
   {% if posts %}
   <ul id="posts">
-    <div class="profile-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-8 mt-3 left">
-            <div class="card mb-4">
-              <div class="card-body">
                 {% for post in posts %}
                   <li class="post">
                     <a href="{% url 'post_detail' pk=post.pk %}" class="btn" >{{ post.title }}</a>
@@ -33,20 +27,14 @@
                 <br></br>
                 <p>Nenhum post disponível</p>
                 {% endif %}
-              </div>
-            </div>
-        </div>
-        {% block sidebar %} 
-        {% include 'sidebar_novo_post.html' %}
-        {% endblock sidebar %}
-    </div>
-  </div>
-</div>
   </ul>
   <button id="loadMore" class="btn btn-danger">Carregar mais</button>
 </div>
 </div>
 </div>
+        {% block sidebar %} 
+        {% include 'sidebar_novo_post.html' %}
+        {% endblock sidebar %}
 </div>
 </div>
 <div class="container"><a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}" class="btn btn-primary">Voltar para a disciplina</a></div>
@@ -59,19 +47,20 @@
       for (var i = count; i < items.length; i++) {
           items[i].style.display = 'none';
       }
+
       loadMoreButton.onclick = function() {
           var nextCount = count + 5;
+
           for (var i = count; i < nextCount && i < items.length; i++) {
               items[i].style.display = 'block';
           }
+
           count = nextCount;
+
           if (count >= items.length) {
               loadMoreButton.style.display = 'none';
           }
       };
-      if (items.length === 0) {
-          loadMoreButton.style.display = 'none';
-      }
   };
 </script>
 

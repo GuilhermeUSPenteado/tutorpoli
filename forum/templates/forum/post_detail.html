@@ -11,8 +11,7 @@
       <div class="col-md-8 mt-3 left">
         <div class="card mb-4">
           <div class="card-body">
-  <p>Publicado em: {{ post.post_date|date:"d/m/Y H:i" }}</p>
-  <p>Publicado por: {{ post.author }}</p>
+  <p style="font-weight: bold;">Publicado em {{ post.post_date|date:"d/m/Y H:i" }} por <i>{{ post.author }}</i></p>
   <h1>{{ post.title }}</h1>
   <p>{{ post.content }}</p>
   {% if user.is_authenticated and user == post.author %}
@@ -33,7 +32,7 @@
           <div class="card-body">
             <h2>Comentários</h2>
 {% for comment in post.comments.all %}
-  <p>Comentador por {{ comment.author }} em {{ comment.created_date|date:"d/m/Y H:i" }}</p>
+  <p style="font-weight: bold;">Comentador por <i>{{ comment.author }}</i> em {{ comment.created_date|date:"d/m/Y H:i" }}</p>
   <p>{{ comment.text }}</p>
   {% if user.is_authenticated and user == comment.author %}
   <p><a href="{% url 'edit_comment' pk=comment.pk disciplina_id=comment.disciplina.id %}" class="btn btn-primary">Editar comentário</a></p>
@@ -44,7 +43,7 @@
   <div class="reply">
     <div class="card mb-4">
       <div class="card-body">
-      <p>{{ reply.author }} respondeu em {{ reply.created_date|date:"d/m/Y H:i" }}</p>
+      <p style="font-weight: bold;"><i>{{ reply.author }}</i> respondeu em {{ reply.created_date|date:"d/m/Y H:i" }}</p>
       <p>{{ reply.text }}</p>
       {% if user.is_authenticated and user == reply.author %}
       <p><a href="{% url 'edit_reply' pk=reply.pk disciplina_id=reply.comment.disciplina.id %}" class="btn btn-primary">Editar resposta</a></p>

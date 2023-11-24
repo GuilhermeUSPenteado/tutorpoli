@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
 <head>
@@ -17,15 +14,14 @@
     </form>
     </center>
 
-    <ul id="disciplinas">
-    <div class="container">
+    <ul id="disciplinas" class="container">
         <div class="row">
-              <div class="col-md-8 mt-3 left">
+            <div class="col-md-8 mt-3 left">
                 {% for disciplina in disciplinas %}
-                <div class="card mb-4">
+                <div class="card mb-4 disciplina">
                     <div class="card-body">
-                    <h2 class="card-title">{{ disciplina.name }}</h2>
-                    <a href="{% url 'disciplina_detail' disciplina_id=disciplina.id  %}" class="btn btn-primary">Acessar &rarr;</a>
+                        <h2 class="card-title">{{ disciplina.name }}</h2>
+                        <a href="{% url 'disciplina_detail' disciplina_id=disciplina.id  %}" class="btn btn-primary">Acessar &rarr;</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -34,40 +30,38 @@
             {% include 'sidebar.html' %}
             {% endblock sidebar %}
         </div>
-    </div>
     </ul>
+
     <div class="container">
-    <button id="loadMore" class="btn btn-danger">Carregar mais</button>
+        <button id="loadMore" class="btn btn-danger">Carregar mais</button>
     </div>
 
-<script>
-    window.onload = function() {
-        var items = document.getElementsByClassName('disciplina');
-        var loadMoreButton = document.getElementById('loadMore');
-        var count = 3;
+    <script>
+        window.onload = function() {
+            var items = document.getElementsByClassName('disciplina');
+            var loadMoreButton = document.getElementById('loadMore');
+            var count = 5;
 
-        // Inicialmente, oculte todas as disciplinas acima do limite
-        for (var i = count; i < items.length; i++) {
-            items[i].style.display = 'none';
-        }
-
-        loadMoreButton.onclick = function() {
-            // Quando o botão "Carregar mais" é clicado, exiba mais 5 disciplinas
-            var nextCount = count + 5;
-            for (var i = count; i < nextCount && i < items.length; i++) {
-                items[i].style.display = 'block';
+            for (var i = count; i < items.length; i++) {
+                items[i].style.display = 'none';
             }
-            count = nextCount;
 
-            // Se todas as disciplinas estiverem visíveis, oculte o botão "Carregar mais"
-            if (count >= items.length) {
-                loadMoreButton.style.display = 'none';
-            }
+            loadMoreButton.onclick = function() {
+                var nextCount = count + 5;
+
+                for (var i = count; i < nextCount && i < items.length; i++) {
+                    items[i].style.display = 'block';
+                }
+
+                count = nextCount;
+
+                if (count >= items.length) {
+                    loadMoreButton.style.display = 'none';
+                }
+            };
         };
-    };
-</script>
+    </script>
 
 </body>
 </html>
 {% endblock %}
-

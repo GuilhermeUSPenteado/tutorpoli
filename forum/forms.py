@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from .models import Disciplina, Post, Comment, Arquivo, Reply
 
 class CustomUserCreationForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=True, help_text='Obrigatório.')
-    last_name = forms.CharField(max_length=30, required=True, help_text='Obrigatório.')
+    first_name = forms.CharField(max_length=30, required=True, help_text='Obrigatório.', label='Nome')
+    last_name = forms.CharField(max_length=30, required=True, help_text='Obrigatório.', label='Sobrenome')
     email = forms.EmailField(max_length=254, help_text='Obrigatório. Informe um email válido.')
     class Meta:
         model = User

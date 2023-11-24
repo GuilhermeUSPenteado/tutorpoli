@@ -5,40 +5,57 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
+<style>
+  .card {
+    box-shadow: 0 16px 48px #6a6a6b;
+  }
+</style>
+<div class="container">
+    <div class="row">
+      <div class="col-md-8 mt-3 left">
+        <div class="card mb-4">
+          <div class="card-body">
     <h1>Usuários</h1>
     {% for user in users %}
-        <div>
-            <div class="container">
-                <div class="row">
-                  <div class="col-md-8 mt-3 left">
-                    <div class="card mb-4">
-                      <div class="card-body">
-            <p><a href="{% url 'user_profile' user.id %}"class="btn">{{ user.username }}</a></p>
-        </div>
-        <button id="loadMore" class="btn btn-primary">Carregar mais</button>
-    </div>
-</div>
-</div>
-</div>
-</div>
+        <p><a href="{% url 'user_profile' user.id %}"class="btn">{{ user.username }}</a></p>
     {% empty %}
         <p>Não há usuários :(</p>
     {% endfor %}
 
+<div class="container">
+    <button id="loadMore" class="btn btn-danger">Carregar mais</button>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="container">             
+    <a href="{% url 'home' %}">
+    <button class="btn btn-primary">Voltar para a página inicial</button>
+    </a></div>  
+    
 <script>
     window.onload = function() {
         var items = document.getElementsByClassName('user');
         var loadMoreButton = document.getElementById('loadMore');
         var count = 10;
+
         for (var i = count; i < items.length; i++) {
             items[i].style.display = 'none';
         }
+
         loadMoreButton.onclick = function() {
             var nextCount = count + 5;
+
             for (var i = count; i < nextCount && i < items.length; i++) {
                 items[i].style.display = 'block';
             }
+
             count = nextCount;
+
             if (count >= items.length) {
                 loadMoreButton.style.display = 'none';
             }

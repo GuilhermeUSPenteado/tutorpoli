@@ -5,23 +5,36 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
-    <div class="profile-section">
-        <h2>Detalhes do Perfil</h2>
-        <p>Data de ingresso: {{ user.date_joined }}</p>
-        <p>último acesso: {{ user.last_login }}</p>
-        <p>Nome: {{ user.first_name }}</p>
-        <p>Sobrenome: {{ user.last_name }}</p>
-        <p>Email: {{ user.email }}</p>    
-        <p>Tipo: {{ user.profile.get_tipo_display }}</p>
-        <p>Biografia: {{ user.profile.biografia }}</p>
-        {% if user.profile.tipo == 'T' %}
-        <p>Disciplinas que este usuário é tutor:</p>
-        <ul>
-            {% for disciplina in user.profile.disciplinas.all %}
-                <li>{{ disciplina.name }}</li>
-            {% endfor %}
-        {% endif %}
+<style>
+    .card {
+      box-shadow: 0 16px 48px #6a6a6b;
+    }
+  </style>
+<div class="profile-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 mt-3 left">
+          <div class="card mb-4">
+            <div class="card-body">
+                <h2>Detalhes do Perfil</h2>
+                <p>Data de ingresso: {{ user.date_joined }}</p>
+                <p>último acesso: {{ user.last_login }}</p>
+                <p>Nome: {{ user.first_name }}</p>
+                <p>Sobrenome: {{ user.last_name }}</p>
+                <p>Email: {{ user.email }}</p>    
+                <p>Tipo: {{ user.profile.get_tipo_display }}</p>
+                <p>Biografia: {{ user.profile.biografia }}</p>
+                {% if user.profile.tipo == 'T' %}
+                <p>Disciplinas que este usuário é tutor:</p>
+                <ul>
+                    {% for disciplina in user.profile.disciplinas.all %}
+                        <li>{{ disciplina.name }}</li>
+                    {% endfor %}
+                {% endif %}
+          </div>
+        </div>
     </div>
-
-      </ul>
+</div>
+</div>
+</div>      
 {% endblock %}

@@ -7,15 +7,22 @@
 {% block content %}
   <h2>Login</h2>
   <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 mt-3 left">
+          <div class="card mb-4">
+            <div class="card-body">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <button type="submit" class="btn btn-primary full-width">Login</button>
 
-
-
-    <input type="submit" value="Login" class="btn btn-primary full-width">
-		<hr>
-		<p class="text-center">Esqueceu sua senha?  <a href="#">Redefinir Senha</a></p>
-		<p class="text-center">Não tem uma conta? <a href="{% url 'signup' %}">Cadastro</a></p>
-  </form>
+              <hr>
+              <p class="text-center">Esqueceu sua senha?  <a href="#">Redefinir Senha</a></p>
+              <p class="text-center">Não tem uma conta? <a href="{% url 'signup' %}">Cadastro</a></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

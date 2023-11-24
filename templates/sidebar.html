@@ -1,0 +1,47 @@
+{% block sidebar %}
+
+<style>
+  .card {
+    box-shadow: 0 16px 48px #6a6a6b;
+  }
+</style>
+
+<div class="col-md-4 float-right ">
+  <div class="card my-4">
+    <h5 class="card-header">Seja bem vindo!</h5>
+    <div class="card-body">
+      <p class="card-text"> Esta página foi desenvolvida no intuito de auxiliar os alunos da Poli!! </p>
+      <a href="https://github.com/GuilhermeUSPenteado/tutorpoli" class="btn btn-secondary">Caso queira ver o repositório!</a>
+    </div>
+
+    <h5 class="card-header">Disciplinas Populares</h5>
+    <div class="card-body">
+        {% for disciplina in disciplinas_populares|slice:":3" %}
+            <p>{{ disciplina.name }}: {{ disciplina.contador }} acessos</p>
+        {% empty %}
+            <p>Nenhuma disciplina foi acessada ainda.</p>
+        {% endfor %}
+    </div>
+
+    <h5 class="card-header">Disciplinas com mais publicações no fórum</h5>
+    <div class="card-body">
+        {% for disciplina in disciplina_com_mais_posts %}
+            <p>A disciplina {{ disciplina.name }} tem {{ disciplina.num_posts }} posts.</p>
+        {% empty %}
+            <p>Nenhuma disciplina tem posts no fórum ainda.</p>
+        {% endfor %}
+    </div>
+
+    <h5 class="card-header">Arquivos Populares</h5>
+    <div class="card-body">
+      {% for arquivo in arquivos_populares %}
+          <p>Arquivo {{ arquivo.titulo }} da disciplina {{ arquivo.disciplina.name }}: {{ arquivo.contador }} downloads</p>
+      {% empty %}
+          <p>Nenhum arquivo foi baixado ainda.</p>
+      {% endfor %}
+  </div>
+
+  </div>
+</div>
+
+{% endblock sidebar %}

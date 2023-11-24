@@ -8,9 +8,19 @@
     <h1>Usuários</h1>
     {% for user in users %}
         <div>
-            <p><a href="{% url 'user_profile' user.id %}">{{ user.username }}</a></p>
+            <div class="container">
+                <div class="row">
+                  <div class="col-md-8 mt-3 left">
+                    <div class="card mb-4">
+                      <div class="card-body">
+            <p><a href="{% url 'user_profile' user.id %}"class="btn">{{ user.username }}</a></p>
         </div>
-        <button id="loadMore">Carregar mais</button>
+        <button id="loadMore" class="btn btn-primary">Carregar mais</button>
+    </div>
+</div>
+</div>
+</div>
+</div>
     {% empty %}
         <p>Não há usuários :(</p>
     {% endfor %}

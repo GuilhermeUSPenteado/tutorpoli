@@ -5,10 +5,13 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
+<div class="container">
 <h1>Editar resposta</h1>
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Salvar</button>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+
 </form>
+</div>
 {% endblock %}

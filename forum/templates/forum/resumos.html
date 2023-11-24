@@ -5,21 +5,37 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
-<h1>Resumos - {{ disciplina.name }}</h1>  
-<br></br>
-{% for arquivo in arquivos %}
-    <p><a href="{{ arquivo.arquivo.url }}">{{ arquivo.titulo }}</a></p>
-    {% if user.is_authenticated and user == arquivo.author %}
-    <p><a href="{% url 'delete_arquivo' pk=arquivo.pk %}">Excluir arquivo</a></p>
-    {% endif %}
-{% endfor %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload</button>
-</form>
+<style>
+  .card {
+    box-shadow: 0 16px 48px #6a6a6b;
+  }
+</style>
+<div class="container">
+    <div class="row">
+      <div class="col-md-8 mt-3 left">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h1>Resumos - {{ disciplina.name }}</h1>
+                {% for arquivo in arquivos %}
+                <div class="container">
+                    <p><a href="{{ arquivo.arquivo.url }}">{{ arquivo.titulo }}</a></p>
+                    {% if user.is_authenticated and user == arquivo.author %}
+                    <p><a href="{% url 'delete_arquivo' pk=arquivo.pk %}" class="btn btn-primary">Excluir arquivo</a></p>
+                    {% endif %}
+                </div>    
+                {% empty %}
+                <p>Ainda não há arquivos</p>
+                {% endfor %}
 
-<a href="{% url 'arquivos' disciplina_id=disciplina.id %}">
-    <button>Voltar</button>
+<a href="{% url 'arquivos' disciplina_id=disciplina.id %}" class="btn btn-primary">
+    <button class="btn btn-primary">Voltar</button>
 </a>
+</div>
+</div>
+</div>
+{% block sidebar %} 
+{% include 'sidebar_upload.html' %}
+{% endblock sidebar %}
+</div>
+</div>
 {% endblock %}

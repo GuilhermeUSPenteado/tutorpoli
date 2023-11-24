@@ -6,20 +6,31 @@
 
 
 {% block content %}
-  <h2>Tutores para {{ disciplina.name }}</h2>
+<style>
+  .card {
+    box-shadow: 0 16px 48px #6a6a6b;
+  }
+</style>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 mt-3 left">
+      <div class="card mb-4">
+        <div class="card-body">
+<h1>{{ disciplina.name }}</h1>
   <ul>
     {% for tutor in tutors %}
-      <li><a href="{% url 'user_profile' user.id %}">{{ tutor.user.username }}</li></a>
+      <li><a href="{% url 'user_profile' user.id %}" class="btn btn-primary">{{ tutor.user.username }}</li></a>
     {% empty %} 
     <p>Não há tutores para essa disciplina ainda</p>
     {% endfor %}
-    <button id="loadMore">Carregar mais</button>
+    <button id="loadMore" class="btn btn-primary">Carregar mais</button>
   </ul>
-
-  <a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}">
-    <button>Voltar para a disciplina</button>
-  </a>
-
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="container"><a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}" class="btn btn-primary">Voltar para a disciplina</a></div>
 <script>
     window.onload = function() {
         var items = document.getElementsByClassName('tutor');

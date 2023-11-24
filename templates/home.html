@@ -9,39 +9,36 @@
     <title>TutorPoli</title>
 </head>
 <body>
+    <center>
     <h1>Disciplinas</h1>
     <form method="GET">
         <input type="text" name="search" placeholder="Procurar por nome ou sigla da disciplina">
-        <input type="submit" value="Procurar">
+        <input type="submit" class="btn btn-danger" value="Procurar">
     </form>
+    </center>
+
     <ul id="disciplinas">
-    {% for disciplina in disciplinas %}
-        <p class="disciplina"><a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}">{{ disciplina.name }}</a></p>
-    {% endfor %}
+    <div class="container">
+        <div class="row">
+              <div class="col-md-8 mt-3 left">
+                {% for disciplina in disciplinas %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                    <h2 class="card-title">{{ disciplina.name }}</h2>
+                    <a href="{% url 'disciplina_detail' disciplina_id=disciplina.id  %}" class="btn btn-primary">Acessar &rarr;</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% block sidebar %} 
+            {% include 'sidebar.html' %}
+            {% endblock sidebar %}
+        </div>
+    </div>
     </ul>
-    <button id="loadMore">Carregar mais</button>
-
-    <h2>Disciplinas Populares</h2>
-{% for disciplina in disciplinas_populares|slice:":3" %}
-    <p>{{ disciplina.name }}: {{ disciplina.contador }} acessos</p>
-{% endfor %}
-
-    <h2>Disciplinas com mais publicações no fórum</h2>
-{% for disciplina in disciplina_com_mais_posts %}
-    <p>A disciplina {{ disciplina.name }} tem {{ disciplina.num_posts }} posts.</p>
-{% empty %}
-    <p>Nenhuma disciplina tem posts no fórum ainda.</p>
-{% endfor %}
-
-<h2>Arquivos Populares</h2>
-{% for arquivo in arquivos_populares %}
-    <p>Arquivo {{ arquivo.titulo }} da disciplina {{ arquivo.disciplina.name }}: {{ arquivo.contador }} downloads</p>
-{% endfor %}
-
-<h2>Usuários Mais Ativos</h2>
-{% for profile in usuarios_ativos %}
-    <p>{{ profile.username }}: {{ profile.horas_ativas }} horas</p>
-{% endfor %}
+    <div class="container">
+    <button id="loadMore" class="btn btn-danger">Carregar mais</button>
+    </div>
 
 <script>
     window.onload = function() {

@@ -5,6 +5,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
+<div class="container">
   <h2>Escolher Disciplinas</h2>
   <form method="post">
     {% csrf_token %}
@@ -12,6 +13,7 @@
       <input type="checkbox" name="disciplinas" value="{{ disciplina.id }}">
       <label>{{ disciplina.name }}</label><br>
     {% endfor %}
-    <button type="submit">Salvar</button>
+    <button type="submit" class="btn btn-primary">Salvar</button>
   </form>
+</div>
 {% endblock %}

@@ -4,39 +4,58 @@
 <html lang="en">
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
+
+
 {% block content %}
-  <div class="profile-section">
-    <h1>Bem-vindo, {{ user.username }}!</h1>
-    <h2>Detalhes do Perfil</h2>
-    <p>Data de ingresso: {{ user.date_joined }}</p>
-    <p>último acesso: {{ user.last_login }}</p>
-    <p>Nome: {{ user.first_name }}</p>
-    <p>Sobrenome: {{ user.last_name }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Tipo: {{ user.profile.get_tipo_display }}</p>
-    <p>Biografia: {{ user.profile.biografia }}</p>
-    {% if user.profile.tipo == 'T' %}
-      <p>Disciplinas que você é tutor:</p>
-      <ul>
-        {% for disciplina in user.profile.disciplinas.all %}
-          <li>{{ disciplina.name }}</li>
-        {% endfor %}
-      </ul>
-      <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="tipo" value="A">Tornar-se Aluno</button>
-      </form>
-    {% elif user.profile.tipo == 'A' %}
-      <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="tipo" value="T">Tornar-se Tutor</button>
-      </form>
-    {% endif %}
+<style>
+  .card {
+    box-shadow: 0 16px 48px #6a6a6b;
+  }
+</style>  
+
+<div class="profile-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 mt-3 left">
+          <div class="card mb-4">
+            <div class="card-body">
+            <h1>Bem-vindo, {{ user.username }}!</h1>
+            <h2>Detalhes do Perfil</h2>
+            <p>Data de ingresso: {{ user.date_joined }}</p>
+            <p>último acesso: {{ user.last_login }}</p>
+            <p>Nome: {{ user.first_name }}</p>
+            <p>Sobrenome: {{ user.last_name }}</p>
+            <p>Email: {{ user.email }}</p>
+            <p>Tipo: {{ user.profile.get_tipo_display }}</p>
+            <p>Biografia: {{ user.profile.biografia }}</p>
+            {% if user.profile.tipo == 'T' %}
+              <p>Disciplinas que você é tutor:</p>
+              <ul>
+                {% for disciplina in user.profile.disciplinas.all %}
+                  <li>{{ disciplina.name }}</li>
+                {% endfor %}
+              </ul>
+              <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="tipo" value="A" class="btn btn-primary">Tornar-se Aluno</button>
+              </form>
+            {% elif user.profile.tipo == 'A' %}
+              <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="tipo" value="T" class="btn btn-primary">Tornar-se Tutor</button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <div class="container">
+    <div class="actions">
+      <a href="{% url 'edit_biography' %}" class="btn btn-primary">Editar Biografia</a>
+    </div>
   </div>
 
-  <div class="actions">
-    <a href="{% url 'edit_biography' %}">Editar Biografia</a>
-    <br></br>
-    <a href="{% url 'logout' %}">Logout</a>
-  </div>
 {% endblock %}

@@ -5,7 +5,17 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
-<h1>{{ disciplina.name }}</h1>
+<style>
+  .card {
+    box-shadow: 0 16px 48px #6a6a6b;
+  }
+</style>
+<div class="container">
+    <div class="row">
+      <div class="col-md-8 mt-3 left">
+        <div class="card mb-4">
+          <div class="card-body">
+<h1>Informações - {{ disciplina.name }}</h1>
 <p>Horário da monitoria: {{ disciplina.horario_monitoria }}</p>
 <p>Dia(s) da semana: {{ disciplina.dia_da_semana }}</p>
 <p>Sala: {{ disciplina.sala }}</p>
@@ -13,16 +23,19 @@
 
 {% if user.is_authenticated and user.profile.tipo == 'T' and disciplina in user.profile.disciplinas.all %}
 <a href="{% url 'editar_disciplina' disciplina_id=disciplina.id %}">
-    <button>Editar informações da disciplina</button>
+    <button class="btn btn-primary">Editar informações da disciplina</button>
 </a>
 {% endif %}
 {% if user.is_authenticated and request.user.is_superuser %}
 <a href="{% url 'editar_disciplina' disciplina_id=disciplina.id %}">
-    <button>Editar informações da disciplina</button>
+    <button class="btn btn-primary">Editar informações da disciplina</button>
 </a>
 {% endif %}
-<br></br>
-<a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}">
-    <button>Voltar para a disciplina</button>
-</a>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="container"><a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}" class="btn btn-primary">Voltar para a disciplina</a></div>
 {% endblock %}

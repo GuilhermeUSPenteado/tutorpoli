@@ -5,12 +5,16 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
-  <h1>Editar {{ disciplina.name }}</h1>
+<div class="container">
+  <h1>Editar as informações de {{ disciplina.name }}</h1>
   <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Salvar</button>
+    <button type="submit" class="btn btn-primary">Salvar</button>
   </form>
-<a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}">
-    <button>Voltar para a disciplina</button>
+  <br></br>
+<a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}" class="btn btn-primary">
+    <button class="btn btn-primary">Voltar para a disciplina</button>
+</a>
+</div>
 {% endblock %}

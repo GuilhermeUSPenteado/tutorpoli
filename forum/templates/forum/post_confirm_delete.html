@@ -5,11 +5,13 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
+<div class="container">
   <h2>Excluir Post</h2>
   <p>Você tem certeza que deseja excluir o post "{{ post.title }}"?</p>
   <form method="POST">
     {% csrf_token %}
-    <button type="submit">Confirmar exclusão</button>
+    <button type="submit" class="btn btn-primary">Confirmar exclusão</button>
   </form>
-  <a href="{% url 'post_detail' pk=post.pk %}">Cancelar</a>
+  <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-primary">Cancelar</a>
+</div>
 {% endblock %}

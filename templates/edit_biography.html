@@ -5,11 +5,13 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
+<div class="container">
   <h1>Editar Biografia</h1>
   <form method="post">
     {% csrf_token %}
     <label for="biografia">Biografia:</label><br>
     <textarea id="biografia" name="biografia">{{ user.profile.biografia }}</textarea><br>
-    <button type="submit">Salvar</button>
+    <button type="submit" class="btn btn-primary">Salvar</button>
   </form>
+</div>  
 {% endblock %}

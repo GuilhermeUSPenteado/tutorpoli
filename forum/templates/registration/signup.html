@@ -7,8 +7,18 @@
 {% block content %}
   <h2>Cadastro</h2>
   <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Cadastrar</button>
-  </form>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 mt-3 left">
+          <div class="card mb-4">
+            <div class="card-body">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <button type="submit" class="btn btn-primary full-width">Cadastrar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

@@ -28,6 +28,24 @@
             <p>Email: {{ user.email }}</p>
             <p>Tipo: {{ user.profile.get_tipo_display }}</p>
             <p>Biografia: {{ user.profile.biografia }}</p>
+
+
+            {% if movie_list %}
+              <section class="lista-de-cards">
+                  {% for movie in movie_list %}
+                      <article class="card">
+                          <a href="{% url 'detail' movie.id %}">
+                              <img src="{{ movie.poster_url }}" alt="Poster do filme {{ movie.name }}" />
+                          </a>
+                          <p>{{ user.profile.movie.name }} ({{ user.profile.movie.release_year }})</p>
+                      </article>
+                  {% endfor %}
+              </section>
+            {% else %}
+              <p>Importe seu filme favorito para as pessoas te conhecerem melhor!!  
+              <p><button type="submit" class="btn btn-primary" onclick="window.location.href='{% url 'import' %}'">Importar Filme</button></p>
+            {% endif %}
+
             {% if user.profile.tipo == 'T' %}
               <p>Disciplinas que você é tutor:</p>
               <ul>
@@ -45,6 +63,8 @@
                 <button type="submit" name="tipo" value="T" class="btn btn-primary">Tornar-se Tutor</button>
               </form>
             {% endif %}
+
+
           </div>
         </div>
       </div>

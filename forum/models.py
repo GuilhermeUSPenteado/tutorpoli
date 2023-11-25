@@ -16,6 +16,14 @@ class Disciplina(models.Model):
     contador = models.IntegerField(default=0)
     def __str__(self):
         return self.name
+    
+class Movie(models.Model):
+    name = models.CharField(max_length=255)
+    release_year = models.IntegerField()
+    poster_url = models.URLField(max_length=200, null=True)
+
+    def __str__(self):
+        return f'{self.name} ({self.release_year})'
 
 class Profile(models.Model):
     TIPOS = (
@@ -28,6 +36,7 @@ class Profile(models.Model):
     disciplinas = models.ManyToManyField(Disciplina, blank=True)
     biografia = models.TextField(blank=True)
     tempo_ativo = models.DurationField(default=timedelta())
+    movie = models.ManyToManyField(Movie)
 
 class Arquivo(models.Model):
     TIPOS = (
@@ -77,3 +86,6 @@ class Reply(models.Model):
         return self.text
     def get_absolute_url(self):
         return reverse('post_detail', kwargs={'pk': self.comment.post.pk})
+    
+
+

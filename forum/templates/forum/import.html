@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Importar Filmes de TMDB</h2>
+<form action="{% url 'import' %}" method="post">
+    {% csrf_token %}
+    <p>
+        <label for="id_movie_id">ID do filme:</label>
+        <input type="number" name="movie_id" id="id_movie_id" />
+    </p>
+    <button class="button" type="submit">Importar</button>
+</form>
+
+{% endblock content %}

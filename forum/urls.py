@@ -4,6 +4,8 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+# app_name = 'forum'
+
 urlpatterns = [
     path('', views.home, name='home'),
     path('posts/<int:disciplina_id>/', views.post_list, name='post_list'),
@@ -34,4 +36,8 @@ urlpatterns = [
     path('escolher_disciplinas/', views.escolher_disciplinas, name='escolher_disciplinas'),
     path('edit_biography/', views.edit_biography, name='edit_biography'),
     path('disciplina/<int:disciplina_id>/editar/', views.editar_disciplina, name='editar_disciplina'),
+    path('import/', views.import_movie, name='import'),
+    path('<int:movie_id>/', views.detail_movie, name='detail'),
+    path('api/v1/', include('api.urls')),
+    path('accounts/profile/', views.MovieListView.as_view(), name='profile'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

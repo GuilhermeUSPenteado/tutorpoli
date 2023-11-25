@@ -6,15 +6,18 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils import timezone
-from django.http import HttpResponseForbidden, FileResponse, Http404
+from django.http import HttpResponseForbidden, FileResponse, Http404, HttpResponseRedirect
 from django.db.models import Q, Count, F
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django import forms
-from .models import Arquivo, Disciplina, Post, Comment, Profile, Reply
+from .models import Arquivo, Disciplina, Post, Comment, Profile, Reply, Movie
 from .forms import CustomUserCreationForm, PostForm, CommentForm, ArquivoForm, DisciplinaForm, ReplyForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import requests
+from django.http import HttpResponseRedirect 
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -53,6 +56,7 @@ def profile(request):
     if request.method == "POST":
         tipo = request.POST.get('tipo')
         biografia = request.POST.get('biografia')
+        movie = request.POST.get('movie')
         if tipo == 'T':
             return redirect('escolher_disciplinas')
         else:
@@ -363,3 +367,52 @@ def editar_disciplina(request, disciplina_id):
     else:
         form = DisciplinaForm(instance=disciplina)
     return render(request, 'forum/editar_disciplina.html', {'form': form, 'disciplina': disciplina})
+
+
+TMDB_API_BASEURL = 'https://api.themoviedb.org/3/movie/'
+TMDB_POSTER_BASEURL = 'https://www.themoviedb.org/t/p/w1280'
+API_KEY = '14cfd7e7813e004c4301b4055cce0f60'
+
+@login_required
+# @permission_required('movies.add_movie')
+def import_movie(request):
+    if request.method == 'POST':
+        movie_id = request.POST['movie_id']
+        r = requests.get(TMDB_API_BASEURL + movie_id,
+                         params={"api_key": API_KEY})
+        if r.status_code == 200:
+            data = r.json()
+            movie = Movie(name=data['title'],
+                          release_year=data['release_date'][:4],
+                          poster_url=TMDB_POSTER_BASEURL + data['poster_path'])
+            movie.save()
+            return HttpResponseRedirect(
+                reverse('detail', args=(movie.pk, )))
+    return render(request, 'forum/import.html', {})
+
+def detail_movie(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+    if 'last_viewed' not in request.session:
+        request.session['last_viewed'] = []
+    request.session['last_viewed'] = [movie_id
+                                      ] + request.session['last_viewed']
+    if len(request.session['last_viewed']) > 5:
+        request.session['last_viewed'] = request.session['last_viewed'][:-1]
+    context = {'movie': movie}
+    return render(request, 'forum/detail.html', context)
+
+class MovieListView(generic.ListView):
+    model = Movie
+    template_name = 'templates/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if 'last_viewed' in self.request.session:
+            context['last_movies'] = []
+            for movie_id in self.request.session['last_viewed']:
+                context['last_movies'].append(
+                    get_object_or_404(Movie, pk=movie_id))
+        return context
+
+
+

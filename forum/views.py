@@ -26,9 +26,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-
-from django.db.models import Q
+    if hasattr(instance, 'profile'):
+        instance.profile.save()
 
 def home(request):
     search_query = request.GET.get('search', '')
@@ -106,9 +105,7 @@ class SignUpView(generic.CreateView):
     template_name = 'registration/signup.html'
 
 def logout_view(request):
-    tempo_logado = datetime.now() - request.user.last_login
-    profile = Profile.objects.get(user=request.user)
-    profile.tempo_ativo += tempo_logado
+    profile = get_object_or_404(Profile, user=request.user)
     profile.save()
     logout(request)
     return redirect('base')

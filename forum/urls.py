@@ -3,6 +3,13 @@ from django.contrib.auth import views as auth_views
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import RegisterView
+from django.contrib.auth.views import ( 
+    PasswordResetView, 
+    PasswordResetDoneView, 
+    PasswordResetConfirmView,
+    PasswordResetCompleteView
+)
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -34,4 +41,9 @@ urlpatterns = [
     path('escolher_disciplinas/', views.escolher_disciplinas, name='escolher_disciplinas'),
     path('edit_biography/', views.edit_biography, name='edit_biography'),
     path('disciplina/<int:disciplina_id>/editar/', views.editar_disciplina, name='editar_disciplina'),
+    path('register/', RegisterView.as_view(),name='register'),
+    path('password_reset/', PasswordResetView.as_view(),name='password_reset'),
+    path('password_reset/done/', PasswordResetDoneView.as_view(),name='password_reset_done'),
+    path('password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
+    path('password_reset_complete/',PasswordResetCompleteView.as_view(),name='password_reset_complete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -15,6 +15,9 @@ import os
 
 import dj_database_url
 
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -151,3 +154,10 @@ CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com/"] # adicione esta linha
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'guilhermep2003@gmail.com'
+EMAIL_HOST_PASSWORD = 'btby zjan xjnj kivn'

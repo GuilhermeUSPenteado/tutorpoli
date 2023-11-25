@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -15,6 +16,8 @@ from .models import Arquivo, Disciplina, Post, Comment, Profile, Reply
 from .forms import CustomUserCreationForm, PostForm, CommentForm, ArquivoForm, DisciplinaForm, ReplyForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.views.generic.edit import FormView
+from .forms import RegisterForm
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -363,3 +366,16 @@ def editar_disciplina(request, disciplina_id):
     else:
         form = DisciplinaForm(instance=disciplina)
     return render(request, 'forum/editar_disciplina.html', {'form': form, 'disciplina': disciplina})
+
+class RegisterView(FormView):
+    template_name = 'users/register.html'
+    form_class = RegisterForm
+    redirect_authenticated_user = True
+    success_url = reverse_lazy('tasks')
+    
+    def form_valid(self, form):
+        user = form.save()
+        if user:
+            login(self.request, user)
+        
+        return super(RegisterView, self).form_valid(form)

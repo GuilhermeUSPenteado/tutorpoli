@@ -52,3 +52,10 @@ class DisciplinaForm(forms.ModelForm):
     class Meta:
         model = Disciplina
         fields = ['horario_monitoria', 'dia_da_semana', 'sala', 'nome_monitor']
+
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(max_length=254)
+
+    class Meta:
+        model = User
+        fields = ('username',  'email', 'password1', 'password2', )

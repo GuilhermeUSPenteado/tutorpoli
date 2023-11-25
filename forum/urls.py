@@ -3,6 +3,13 @@ from django.contrib.auth import views as auth_views
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import RegisterView
+from django.contrib.auth.views import ( 
+    PasswordResetView, 
+    PasswordResetDoneView, 
+    PasswordResetConfirmView,
+    PasswordResetCompleteView
+)
 
 # app_name = 'forum'
 
@@ -40,4 +47,9 @@ urlpatterns = [
     path('<int:movie_id>/', views.detail_movie, name='detail'),
     path('api/v1/', include('api.urls')),
     path('accounts/profile/', views.MovieListView.as_view(), name='profile'),
+    path('register/', RegisterView.as_view(),name='register'),
+    path('password_reset/', PasswordResetView.as_view(),name='password_reset'),
+    path('password_reset/done/', PasswordResetDoneView.as_view(),name='password_reset_done'),
+    path('password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
+    path('password_reset_complete/',PasswordResetCompleteView.as_view(),name='password_reset_complete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

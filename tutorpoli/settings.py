@@ -15,9 +15,6 @@ import os
 
 import dj_database_url
 
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

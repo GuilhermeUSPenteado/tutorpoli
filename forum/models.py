@@ -36,7 +36,7 @@ class Profile(models.Model):
     disciplinas = models.ManyToManyField(Disciplina, blank=True)
     biografia = models.TextField(blank=True)
     tempo_ativo = models.DurationField(default=timedelta())
-    movie = models.ManyToManyField(Movie)
+    movie = models.ManyToManyField(Movie, blank=True)
 
 class Arquivo(models.Model):
     TIPOS = (

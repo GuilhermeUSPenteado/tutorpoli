@@ -9,7 +9,17 @@
     .card {
       box-shadow: 0 16px 48px #6a6a6b;
     }
+    .movie-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .movie-item {
+    flex: 0 0 calc(33.3333% - 20px);
+    margin: 10px;
+  }
   </style>
+
 <div class="profile-section">
     <div class="container">
       <div class="row">
@@ -34,7 +44,36 @@
           </div>
         </div>
     </div>
+  </div>
 </div>
 </div>
-</div>      
+
+<div class="profile-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 mt-3 left">
+        <div class="card mb-4">
+          <div class="card-body">
+    <h2>Filmes favoritos deste usuário</h2>
+    <div class="card-body movie-container">
+      {% if user.profile.movie.all %}
+        {% for movie in user.profile.movie.all %}
+          <div class="movie-item">
+            <p>Filme: {{ movie.name }} ({{ movie.release_year }})</p>
+            <img src="{{ movie.poster_url }}" alt="Poster do filme {{ movie.name }}" style="width: 100%; height: auto;">
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>O usuário ainda não importou filmes.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="container"><a href="{% url 'home' %}" class="btn btn-primary">Voltar para a página inicial</a></div>
+
 {% endblock %}

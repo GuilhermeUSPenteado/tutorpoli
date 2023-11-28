@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Disciplina, Post, Comment, Arquivo, Reply
+from .models import Disciplina, Post, Comment, Arquivo, Reply, Movie
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, help_text='Obrigatório.', label='Nome')
@@ -59,3 +59,8 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username',  'email', 'password1', 'password2', )
+
+class MovieForm(forms.ModelForm):
+    class Meta:
+        model = Movie
+        fields = ['name', 'release_year', 'poster_url']

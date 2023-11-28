@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+{% block content %}
+<div class="post">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mt-3 left">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h1>Editar Filme</h1>
+                        <form action="{% url 'edit_movie' %}" method="post">
+                            {% csrf_token %}
+                            <p>
+                                <label for="id_movie_id">ID do filme:</label>
+                                <input type="number" name="movie_id" id="id_movie_id" />
+                            </p>
+                            <button class="btn btn-primary" type="submit">Salvar Edições</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

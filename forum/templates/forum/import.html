@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
+<div class="post">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 mt-3 left">
+        <div class="card mb-4">
+          <div class="card-body">
 <h2>Importar Filmes de TMDB</h2>
 <form action="{% url 'import' %}" method="post">
     {% csrf_token %}
@@ -8,7 +18,11 @@
         <label for="id_movie_id">ID do filme:</label>
         <input type="number" name="movie_id" id="id_movie_id" />
     </p>
-    <button class="button" type="submit">Importar</button>
+    <button class="btn btn-primary" type="submit">Importar</button>
 </form>
-
+</div>
+</div>
+</div>
+</div>
+</div>
 {% endblock content %}

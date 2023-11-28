@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
-
-{% block title %}
-Listas
-{% endblock title %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
+<div class="post">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 mt-3 left">
+        <div class="card mb-4">
+          <div class="card-body">
 <h2>Listas de Filmes</h2>
 
 <section>
@@ -27,5 +33,9 @@ Listas
     {% endfor %}
 
 </section>
-
+</div>
+</div>
+</div>
+</div>
+</div>
 {% endblock content %}

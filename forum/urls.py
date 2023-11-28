@@ -11,8 +11,6 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView
 )
 
-# app_name = 'forum'
-
 urlpatterns = [
     path('', views.home, name='home'),
     path('posts/<int:disciplina_id>/', views.post_list, name='post_list'),
@@ -44,6 +42,7 @@ urlpatterns = [
     path('edit_biography/', views.edit_biography, name='edit_biography'),
     path('disciplina/<int:disciplina_id>/editar/', views.editar_disciplina, name='editar_disciplina'),
     path('import/', views.import_movie, name='import'),
+    path('delete_movie/<int:movie_id>/', views.delete_movie, name='delete_movie'),
     path('<int:movie_id>/', views.detail_movie, name='detail'),
     path('api/v1/', include('api.urls')),
     path('accounts/profile/', views.MovieListView.as_view(), name='profile'),

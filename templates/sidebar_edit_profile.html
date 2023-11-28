@@ -1,0 +1,29 @@
+{% block sidebar %}
+
+<style>
+  .card {
+    box-shadow: 0 16px 48px #6a6a6b;
+  }
+</style>
+
+<div class="col-md-4 float-right ">
+  <div class="card my-4">
+    <h5 class="card-header">Edite seu perfil</h5>
+    <div class="card-body">
+      <div class="container"><a href="{% url 'edit_biography' %}" class="btn btn-primary">Editar Biografia</a></div>
+<br></br>
+{% if user.profile.tipo == 'T' %}
+<form method="post">
+  {% csrf_token %}
+  <div class="container"><button type="submit" name="tipo" value="A" class="btn btn-primary">Tornar-se Aluno</button></div>
+</form>
+{% elif user.profile.tipo == 'A' %}
+<form method="post">
+  {% csrf_token %}
+  <div class="container"><button type="submit" name="tipo" value="T" class="btn btn-primary">Tornar-se Tutor</button></div>
+</form>
+{% endif %}
+    </div>
+</div>
+
+{% endblock sidebar %}

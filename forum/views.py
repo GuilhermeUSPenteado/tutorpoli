@@ -13,7 +13,7 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django import forms
 from .models import Arquivo, Disciplina, Post, Comment, Profile, Reply, Movie
-from .forms import CustomUserCreationForm, PostForm, CommentForm, ArquivoForm, DisciplinaForm, ReplyForm
+from .forms import CustomUserCreationForm, PostForm, CommentForm, ArquivoForm, DisciplinaForm, ReplyForm, MovieForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import requests
@@ -377,21 +377,30 @@ TMDB_POSTER_BASEURL = 'https://www.themoviedb.org/t/p/w1280'
 API_KEY = '14cfd7e7813e004c4301b4055cce0f60'
 
 @login_required
-# @permission_required('movies.add_movie')
 def import_movie(request):
     if request.method == 'POST':
         movie_id = request.POST['movie_id']
-        r = requests.get(TMDB_API_BASEURL + movie_id,
-                         params={"api_key": API_KEY})
+        r = requests.get(TMDB_API_BASEURL + movie_id, params={"api_key": API_KEY})
         if r.status_code == 200:
             data = r.json()
             movie = Movie(name=data['title'],
                           release_year=data['release_date'][:4],
                           poster_url=TMDB_POSTER_BASEURL + data['poster_path'])
             movie.save()
-            return HttpResponseRedirect(
-                reverse('detail', args=(movie.pk, )))
+            request.user.profile.movie.add(movie)
+            return redirect('profile')
     return render(request, 'forum/import.html', {})
+
+@login_required
+def delete_movie(request, movie_id):
+    try:
+        movie = Movie.objects.get(pk=movie_id)
+        if movie in request.user.profile.movie.all():
+            request.user.profile.movie.remove(movie)
+            movie.delete()
+    except Movie.DoesNotExist:
+        pass 
+    return redirect('profile')
 
 def detail_movie(request, movie_id):
     movie = get_object_or_404(Movie, pk=movie_id)
@@ -416,11 +425,7 @@ class MovieListView(generic.ListView):
                 context['last_movies'].append(
                     get_object_or_404(Movie, pk=movie_id))
         return context
-
-
-
-
-
+    
 class RegisterView(FormView):
     template_name = 'users/register.html'
     form_class = RegisterForm

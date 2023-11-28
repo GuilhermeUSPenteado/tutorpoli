@@ -1,14 +1,20 @@
 {% extends 'base.html' %}
-
-{% block title %}
-{{ movie.name }} {{ movie.release_year }}
-{% endblock title %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
 {% block content %}
+<div class="post">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 mt-3 left">
+          <div class="card mb-4">
+            <div class="card-body">
 <h2>Detalhes do Filme {{ movie.name }} ({{ movie.release_year }})</h2>
 
 <section class="dados-de-filme">
-    <img src="{{ movie.poster_url }}" alt="Poster do filme {{ movie.name}}">
+    <img src="{{ movie.poster_url }}" alt="Poster do filme {{ movie.name }}" style="width: 285px; height: auto;">
     <ul>
         <li>Nome: {{ movie.name }}</li>
         <li>Ano de Lançamento: {{ movie.release_year }} </li>
@@ -26,5 +32,9 @@
 
     </ul>
 </section>
-
+</div>
+</div>
+</div>
+</div>
+</div>
 {% endblock content %}

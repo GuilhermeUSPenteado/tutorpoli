@@ -11,7 +11,16 @@
   .card {
     box-shadow: 0 16px 48px #6a6a6b;
   }
-</style>  
+  .movie-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.movie-item {
+  flex: 0 0 calc(33.3333% - 20px);
+  margin: 10px;
+}
+</style> 
 
 <div class="profile-section">
     <div class="container">
@@ -29,53 +38,56 @@
             <p>Tipo: {{ user.profile.get_tipo_display }}</p>
             <p>Biografia: {{ user.profile.biografia }}</p>
 
-
-            {% if movie_list %}
-              <section class="lista-de-cards">
-                  {% for movie in movie_list %}
-                      <article class="card">
-                          <a href="{% url 'detail' movie.id %}">
-                              <img src="{{ movie.poster_url }}" alt="Poster do filme {{ movie.name }}" />
-                          </a>
-                          <p>{{ user.profile.movie.name }} ({{ user.profile.movie.release_year }})</p>
-                      </article>
-                  {% endfor %}
-              </section>
-            {% else %}
-              <p>Importe seu filme favorito para as pessoas te conhecerem melhor!!  
-              <p><button type="submit" class="btn btn-primary" onclick="window.location.href='{% url 'import' %}'">Importar Filme</button></p>
-            {% endif %}
-
             {% if user.profile.tipo == 'T' %}
               <p>Disciplinas que você é tutor:</p>
               <ul>
                 {% for disciplina in user.profile.disciplinas.all %}
                   <li>{{ disciplina.name }}</li>
                 {% endfor %}
-              </ul>
-              <form method="post">
-                {% csrf_token %}
-                <button type="submit" name="tipo" value="A" class="btn btn-primary">Tornar-se Aluno</button>
-              </form>
-            {% elif user.profile.tipo == 'A' %}
-              <form method="post">
-                {% csrf_token %}
-                <button type="submit" name="tipo" value="T" class="btn btn-primary">Tornar-se Tutor</button>
-              </form>
             {% endif %}
-
 
           </div>
         </div>
       </div>
+      {% block sidebar %} 
+      {% include 'sidebar_edit_profile.html' %}
+      {% endblock sidebar %}
     </div>
   </div>
 </div>
-  
+
+<div class="profile-section">
   <div class="container">
-    <div class="actions">
-      <a href="{% url 'edit_biography' %}" class="btn btn-primary">Editar Biografia</a>
+    <div class="row">
+      <div class="col-md-8 mt-3 left">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2>Meus filmes favoritos</h2>
+            <div class="card-body movie-container">
+              {% if user.profile.movie.all %}
+                {% for movie in user.profile.movie.all %}
+                  <div class="movie-item">
+                    <p>Filme: {{ movie.name }} ({{ movie.release_year }})</p>
+                    <img src="{{ movie.poster_url }}" alt="Poster do filme {{ movie.name }}" style="width: 100%; height: auto;">
+                    <form method="post" action="{% url 'delete_movie' movie.id %}">
+                      {% csrf_token %}
+                      <p><button type="submit" class="btn btn-danger">Excluir</button></p>
+                    </form>
+                  </div>
+                {% endfor %}
+              {% else %}
+                <p>Importe seus filmes favoritos para as pessoas te conhecerem melhor!!</p>
+                <p><button type="submit" class="btn btn-primary" onclick="window.location.href='{% url 'import' %}'">Importar Filme</button></p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <p><button type="submit" class="btn btn-primary" onclick="window.location.href='{% url 'import' %}'">Editar seus filmes</button></p>
+      </div>
     </div>
   </div>
+</div>
 
+
+<div class="container"><a href="{% url 'home' %}" class="btn btn-primary">Voltar para a página inicial</a></div>
 {% endblock %}

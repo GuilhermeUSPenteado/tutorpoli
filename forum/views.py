@@ -16,7 +16,7 @@ from .models import Arquivo, Disciplina, Post, Comment, Profile, Reply, Movie
 from .forms import CustomUserCreationForm, PostForm, CommentForm, ArquivoForm, DisciplinaForm, ReplyForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-#import requests
+import requests
 from django.http import HttpResponseRedirect 
 
 from django.views.generic.edit import FormView

@@ -22,13 +22,14 @@
 }
 </style> 
 
+<center><h1>Olá, {{ user.username }} :)</h1></center>
+
 <div class="profile-section">
     <div class="container">
       <div class="row">
         <div class="col-md-8 mt-3 left">
           <div class="card mb-4">
             <div class="card-body">
-            <h1>Bem-vindo, {{ user.username }}!</h1>
             <h2>Detalhes do Perfil</h2>
             <p>Data de ingresso: {{ user.date_joined }}</p>
             <p>último acesso: {{ user.last_login }}</p>
@@ -36,7 +37,9 @@
             <p>Sobrenome: {{ user.last_name }}</p>
             <p>Email: {{ user.email }}</p>
             <p>Tipo: {{ user.profile.get_tipo_display }}</p>
+            {% if user.profile.biografia %}
             <p>Biografia: {{ user.profile.biografia }}</p>
+            {% endif %}
 
             {% if user.profile.tipo == 'T' %}
               <p>Disciplinas que você é tutor:</p>
@@ -77,12 +80,10 @@
                 {% endfor %}
               {% else %}
                 <p>Importe seus filmes favoritos para as pessoas te conhecerem melhor!!</p>
-                <p><button type="submit" class="btn btn-primary" onclick="window.location.href='{% url 'import' %}'">Importar Filme</button></p>
               {% endif %}
             </div>
           </div>
         </div>
-        <p><button type="submit" class="btn btn-primary" onclick="window.location.href='{% url 'import' %}'">Editar seus filmes</button></p>
       </div>
     </div>
   </div>

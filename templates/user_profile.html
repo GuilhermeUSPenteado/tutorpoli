@@ -33,7 +33,10 @@
                 <p>Sobrenome: {{ user.last_name }}</p>
                 <p>Email: {{ user.email }}</p>    
                 <p>Tipo: {{ user.profile.get_tipo_display }}</p>
+                {% if user.profile.biografia %}
                 <p>Biografia: {{ user.profile.biografia }}</p>
+                {% endif %}
+                
                 {% if user.profile.tipo == 'T' %}
                 <p>Disciplinas que este usuário é tutor:</p>
                 <ul>

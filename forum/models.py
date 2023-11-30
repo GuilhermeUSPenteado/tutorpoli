@@ -1,6 +1,8 @@
 from asyncio import AbstractServer
 from datetime import timedelta
+from django.db.models.signals import post_save
 from django.db import models
+from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.urls import reverse
@@ -38,10 +40,16 @@ class Profile(models.Model):
     tempo_ativo = models.DurationField(default=timedelta())
     movie = models.ManyToManyField(Movie, blank=True)
 
-    def save(self, *args, **kwargs):
-        if not self.tipo:
-            self.tipo = 'AD'
-        super().save(*args, **kwargs)
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    else:
+        if instance.is_superuser and not instance.profile.tipo:
+            instance.profile.tipo = 'AD'
+            instance.profile.save()
+
+post_save.connect(create_or_update_user_profile, sender=User)
 
 class Arquivo(models.Model):
     TIPOS = (

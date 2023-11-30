@@ -38,6 +38,11 @@ class Profile(models.Model):
     tempo_ativo = models.DurationField(default=timedelta())
     movie = models.ManyToManyField(Movie, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.user.is_superuser and self.tipo != 'AD':
+            self.tipo = 'AD'
+        super().save(*args, **kwargs)
+
 class Arquivo(models.Model):
     TIPOS = (
         ('P', 'Prova'),

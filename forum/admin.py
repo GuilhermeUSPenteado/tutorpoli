@@ -15,7 +15,7 @@ admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'tipo', 'tempo_ativo', 'biografia')
+    list_display = ('user', 'tipo', 'biografia')
     list_filter = ('tipo',)
     search_fields = ['user__username', 'user__first_name', 'user__last_name']
 

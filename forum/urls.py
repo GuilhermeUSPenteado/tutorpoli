@@ -51,4 +51,8 @@ urlpatterns = [
     path('password_reset/done/', PasswordResetDoneView.as_view(),name='password_reset_done'),
     path('password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
     path('password_reset_complete/',PasswordResetCompleteView.as_view(),name='password_reset_complete'),
+    path('get_all',views.getDisciplina),
+    path('post/',views.postDisciplina),
+    path('put/<int:pk>/', views.updateDisciplina),
+    path('delete/<int:pk>/', views.deleteDisciplina),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

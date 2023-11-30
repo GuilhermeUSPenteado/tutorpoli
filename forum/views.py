@@ -18,9 +18,49 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import requests
 from django.http import HttpResponseRedirect 
-
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializer import DataSerializer
 from django.views.generic.edit import FormView
 from .forms import RegisterForm
+
+@api_view(['GET'])
+def getDisciplina(request):
+    app = Disciplina.objects.all()
+    serializer = DataSerializer(app, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def postDisciplina(request):
+    serializer = DataSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def updateDisciplina(request, pk):
+    try:
+        app = Disciplina.objects.get(pk=pk)
+    except Disciplina.DoesNotExist:
+        return Response({'error': 'Disciplina not found'}, status=404)
+
+    serializer = DataSerializer(app, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+def deleteDisciplina(request, pk):
+    try:
+        app = Disciplina.objects.get(pk=pk)
+    except Disciplina.DoesNotExist:
+        return Response({'error': 'Disciplina not found'}, status=404)
+
+    app.delete()
+    return Response(status=204)
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

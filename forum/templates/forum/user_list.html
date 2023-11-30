@@ -21,9 +21,11 @@
         <input type="submit" value="Procurar" class="btn btn-primary">
     </form>
     {% for user in users %}
-        <p><a href="{% url 'user_profile' user.id %}"class="btn">{{ user.username }}</a></p>
+    {% if user.profile.tipo %}
+        <p><a href="{% url 'user_profile' user.id %}" class="btn">{{ user.username }}</a></p>
+    {% endif %}
     {% empty %}
-        <p>Não há usuários :(</p>
+    <p>Não há usuários :(</p>
     {% endfor %}
 
 <div class="container">

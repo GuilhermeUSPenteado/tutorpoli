@@ -40,7 +40,7 @@ def home(request):
     if search_query:
         disciplinas = Disciplina.objects.filter(Q(name__icontains=search_query))
     else:
-        disciplinas = Disciplina.objects.all()
+        disciplinas = Disciplina.objects.all().order_by('name')
     disciplinas_populares = Disciplina.objects.order_by('-contador')[:5]
     arquivos_populares = Arquivo.objects.order_by('-contador')[:3]
     disciplina_com_mais_posts = Disciplina.objects.annotate(num_posts=Count('post')).order_by('-num_posts')[:3]
@@ -100,7 +100,7 @@ def user_list(request):
     if query:
         users = User.objects.filter(Q(username__icontains=query))
     else:
-        users = User.objects.all()
+        users = User.objects.all().order_by('name')
     return render(request, 'forum/user_list.html', {'users': users})
 
 @login_required

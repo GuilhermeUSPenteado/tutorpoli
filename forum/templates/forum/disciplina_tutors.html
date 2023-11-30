@@ -19,7 +19,7 @@
 <h1>{{ disciplina.name }}</h1>
   <ul>
     {% for tutor in tutors %}
-      <li><a href="{% url 'user_profile' user.id %}" class="btn btn-primary">{{ tutor.user.username }}</li></a>
+      <li>{{ tutor.user.username }}</li>
     {% empty %} 
     <p>Não há tutores para essa disciplina ainda</p>
     {% endfor %}

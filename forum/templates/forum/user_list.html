@@ -16,6 +16,10 @@
         <div class="card mb-4">
           <div class="card-body">
     <h1>Usuários</h1>
+    <form method="GET">
+        <input type="text" name="search" placeholder="Procurar usuários" value="{{ request.GET.search }}">
+        <input type="submit" value="Procurar" class="btn btn-primary">
+    </form>
     {% for user in users %}
         <p><a href="{% url 'user_profile' user.id %}"class="btn">{{ user.username }}</a></p>
     {% empty %}

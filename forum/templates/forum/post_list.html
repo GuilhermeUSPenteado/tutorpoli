@@ -10,34 +10,36 @@
       <div class="col-md-8 mt-3 left">
         <div class="card mb-4">
           <div class="card-body">
-<h1>Fórum - {{ disciplina.name }}</h1>
-  <form method="GET">
-    <input type="text" name="search" placeholder="Procurar por título">
-    <input type="submit" value="Procurar" class="btn btn-primary">
-  </form>
-  {% if posts %}
-  <ul id="posts">
-                {% for post in posts %}
-                  <li class="post">
-                    <a href="{% url 'post_detail' pk=post.pk %}" class="btn" >{{ post.title }}</a>
-                    <p>Publicado em: {{ post.post_date|date:"d/m/Y H:i" }}</p>
-                  </li>
-                {% endfor %}
-                {% else %}
-                <br></br>
-                <p>Nenhum post disponível</p>
-                {% endif %}
-  </ul>
-  <button id="loadMore" class="btn btn-danger">Carregar mais</button>
-</div>
-</div>
-</div>
-        {% block sidebar %} 
-        {% include 'sidebar_novo_post.html' %}
-        {% endblock sidebar %}
+            <h1>Fórum - {{ disciplina.name }}</h1>
+              <form method="GET">
+                <input type="text" name="search" placeholder="Procurar por título">
+                <input type="submit" value="Procurar" class="btn btn-primary">
+              </form>
+              {% if posts %}
+              <ul id="posts">
+                            {% for post in posts %}
+                              <li class="post">
+                                <a href="{% url 'post_detail' pk=post.pk %}" class="btn" >{{ post.title }}</a>
+                                <p>Publicado em: {{ post.post_date|date:"d/m/Y H:i" }}</p>
+                              </li>
+                            {% endfor %}
+                            {% else %}
+                            <br></br>
+                            <p>Nenhum post disponível</p>
+                            {% endif %}
+              </ul>
+              <button id="loadMore" class="btn btn-danger">Carregar mais</button>
+            </div>
+          </div>
+        </div>
+      {% block sidebar %} 
+      {% include 'sidebar_novo_post.html' %}
+      {% endblock sidebar %}
+    </div>
 </div>
 </div>
 <div class="container"><a href="{% url 'disciplina_detail' disciplina_id=disciplina.id %}" class="btn btn-primary">Voltar para a disciplina</a></div>
+
 <script>
   window.onload = function() {
       var items = document.getElementsByClassName('post');

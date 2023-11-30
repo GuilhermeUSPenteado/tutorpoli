@@ -96,7 +96,11 @@ def escolher_disciplinas(request):
 
 @login_required
 def user_list(request):
-    users = User.objects.all()
+    query = request.GET.get('search')
+    if query:
+        users = User.objects.filter(Q(username__icontains=query))
+    else:
+        users = User.objects.all()
     return render(request, 'forum/user_list.html', {'users': users})
 
 @login_required

@@ -100,7 +100,7 @@ def user_list(request):
     if query:
         users = User.objects.filter(Q(username__icontains=query))
     else:
-        users = User.objects.all().order_by('name')
+        users = User.objects.all().order_by('date_joined')
     return render(request, 'forum/user_list.html', {'users': users})
 
 @login_required

@@ -40,17 +40,6 @@ class Profile(models.Model):
     tempo_ativo = models.DurationField(default=timedelta())
     movie = models.ManyToManyField(Movie, blank=True)
 
-@receiver(post_save, sender=User)
-def create_or_update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-    else:
-        if instance.is_superuser and not instance.profile.tipo:
-            instance.profile.tipo = 'AD'
-            instance.profile.save()
-
-post_save.connect(create_or_update_user_profile, sender=User)
-
 class Arquivo(models.Model):
     TIPOS = (
         ('P', 'Prova'),

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'forum.apps.ForumConfig',
     'rest_framework',
+    'corsheaders',
     'rest_framework_simplejwt',
     'api.apps.ApiConfig',
 ]

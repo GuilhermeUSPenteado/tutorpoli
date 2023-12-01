@@ -23,4 +23,5 @@ tzdata==2023.3
 urllib3==2.1.0
 whitenoise==6.6.0
 whitenoise
+django-cors-headers
 django-role-permissions

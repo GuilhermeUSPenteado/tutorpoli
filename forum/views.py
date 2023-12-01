@@ -7,7 +7,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils import timezone
-from django.http import HttpResponseForbidden, FileResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponseForbidden, FileResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.db.models import Q, Count, F
 from django.urls import reverse_lazy, reverse
 from django.views import generic
@@ -23,6 +23,12 @@ from rest_framework.decorators import api_view
 from .serializer import DataSerializer
 from django.views.generic.edit import FormView
 from .forms import RegisterForm
+
+def get_token(request):
+    if request.method == 'GET':
+        user = User.objects.get(username=request.GET['username'])
+        token = user.token 
+        return JsonResponse({'token': token})
 
 @api_view(['GET'])
 def getDisciplina(request):

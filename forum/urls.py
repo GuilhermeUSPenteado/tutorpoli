@@ -55,4 +55,5 @@ urlpatterns = [
     path('post/',views.postDisciplina),
     path('put/<int:pk>/', views.updateDisciplina),
     path('delete/<int:pk>/', views.deleteDisciplina),
+    path('token/', views.get_token, name='get_token'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
